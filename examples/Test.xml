@@ -5,14 +5,7 @@
             <key>1</key>
             <value>
                 <positions>2</positions>
-                <serviceRatio>
-                    <values>
-                        <entry>
-                            <key>Student</key>
-                            <value>0.5</value>
-                        </entry>
-                    </values>
-                </serviceRatio>
+                <serviceRatio>0.5</serviceRatio>
                 <systemType>FIFO</systemType>
             </value>
         </entry>
@@ -20,18 +13,7 @@
             <key>2</key>
             <value>
                 <positions>1</positions>
-                <serviceRatio>
-                    <values>
-                        <entry>
-                            <key>Teacher</key>
-                            <value>0.4</value>
-                        </entry>
-                        <entry>
-                            <key>Student</key>
-                            <value>0.4</value>
-                        </entry>
-                    </values>
-                </serviceRatio>
+                <serviceRatio>3.0</serviceRatio>
                 <systemType>FIFO</systemType>
             </value>
         </entry>
@@ -39,19 +21,8 @@
             <key>3</key>
             <value>
                 <positions>12</positions>
-                <serviceRatio>
-                    <values>
-                        <entry>
-                            <key>Teacher</key>
-                            <value>0.4</value>
-                        </entry>
-                        <entry>
-                            <key>Student</key>
-                            <value>0.2</value>
-                        </entry>
-                    </values>
-                </serviceRatio>
-                <systemType>FIFO</systemType>
+                <serviceRatio>4.0</serviceRatio>
+                <systemType>LIFO</systemType>
             </value>
         </entry>
     </systems>
@@ -61,7 +32,7 @@
                 <values>
                     <entry>
                         <key>Student</key>
-                        <value>0.2</value>
+                        <value>0.7</value>
                     </entry>
                 </values>
             </probabilities>
@@ -73,13 +44,46 @@
                 <values>
                     <entry>
                         <key>Student</key>
-                        <value>0.8</value>
+                        <value>0.3</value>
+                    </entry>
+                </values>
+            </probabilities>
+            <targetId>2</targetId>
+            <sourceId>1</sourceId>
+        </edge>
+        <edge>
+            <probabilities>
+                <values>
+                    <entry>
+                        <key>Student</key>
+                        <value>0.4</value>
                     </entry>
                 </values>
             </probabilities>
             <targetId>3</targetId>
             <sourceId>2</sourceId>
         </edge>
+        <edge>
+            <probabilities>
+                <values>
+                    <entry>
+                        <key>Student</key>
+                        <value>0.6</value>
+                    </entry>
+                </values>
+            </probabilities>
+            <targetId>2</targetId>
+            <sourceId>3</sourceId>
+        </edge>
     </edges>
     <isClosed>false</isClosed>
+    <inputSystemId>1</inputSystemId>
+    <arrivalCoefficient>
+        <values>
+            <entry>
+                <key>Student</key>
+                <value>5.0</value>
+            </entry>
+        </values>
+    </arrivalCoefficient>
 </queueNetwork>

@@ -1,8 +1,10 @@
 package view;
 
-import QueueGraph.QueueBuilder;
-import QueueGraph.QueueNetwork;
-import QueueGraph.QueueSerialization;
+
+
+import queue.QueueBuilder;
+import queue.QueueNetwork;
+import queue.graph.QueueSerialization;
 
 import javax.xml.bind.JAXBException;
 import java.io.File;

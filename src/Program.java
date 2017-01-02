@@ -1,7 +1,8 @@
 /**
  * Created by Igor on 03.12.2016.
  */
-import QueueGraph.*;
+import queue.QueueBuilder;
+import queue.graph.QueueSerialization;
 
 import javax.xml.bind.JAXBException;
 import java.io.File;
