@@ -1,50 +1,56 @@
 package queue;
 
+import queue.systems.CalculatorFactory;
 import queue.systems.QueueSystem;
+import queue.systems.StateProbabilityCalculator;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by Igor on 03.12.2016.
  */
 public abstract class QueueNetwork {
-    protected Set<QueueSystem> systems;
+    protected Map<String,QueueSystem> systems;
     protected Set<String> activeCustomerTypes;
+    protected CalculatorFactory calculatorFactory;
 
-    protected QueueNetwork(Set<QueueSystem> systems) {
+    protected QueueNetwork(Map<String,QueueSystem> systems, CalculatorFactory factory) {
         this.systems = systems;
+        this.calculatorFactory = factory;
         activeCustomerTypes = getActiveClientTypes();
     }
 
-    public boolean validate(){
+    public boolean validate() {
         //TODO check if graph is consistent
-        for(QueueSystem system: systems){
-            if(!system.validate()){
+        for (QueueSystem system : systems.values()) {
+            if (!system.validate()) {
                 return false;
             }
         }
         return true;
     }
 
-    private Set<String> getActiveClientTypes(){
+    private Set<String> getActiveClientTypes() {
         HashSet<String> activeTypes = new HashSet<>();
-        for (QueueSystem system : systems){
-            for(String type : system.getActiveClients()){
+        for (QueueSystem system : systems.values()) {
+            for (String type : system.getActiveClients()) {
                 activeTypes.add(type);
             }
         }
         return activeTypes;
     }
 
+
     public Set<String> getActiveCustomerTypes() {
         return activeCustomerTypes;
     }
 
-    public Set<QueueSystem> getSystems() {
-        return systems;
+    public Collection<QueueSystem> getSystems() {
+        return systems.values();
     }
 
-    public abstract void countArrivalRatio();
+    public abstract void calculateParameters();
+
+    public abstract double getStateProbability(HashMap<String, Integer> coditionMap);
 
 }

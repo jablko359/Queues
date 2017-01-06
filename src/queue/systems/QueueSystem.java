@@ -1,6 +1,6 @@
 package queue.systems;
 
-import queue.NodeData;
+import queue.graph.NodeData;
 import queue.Data;
 
 import java.util.HashMap;
@@ -13,14 +13,21 @@ import java.util.Set;
  */
 public abstract class QueueSystem {
 
-    private String id;
-    private int position;
+    protected String id;
+    //indexed position in network
+    protected int position;
 
-    private Data arrivalRatio = new Data();
-    private double serviceRatio;
+    //lambda
+    protected Data arrivalRatio = new Data();
+    //mi
+    protected double serviceRatio;
 
-    private Map<QueueSystem, Data> outputs = new HashMap<>();
-    private Map<QueueSystem, Data> inputs = new HashMap<>();
+    //Rho
+    protected double utilization;
+
+
+    protected Map<QueueSystem, Data> outputs = new HashMap<>();
+    protected Map<QueueSystem, Data> inputs = new HashMap<>();
 
     public void addOutput(QueueSystem system, Data data) {
         outputs.put(system,data);
@@ -34,10 +41,16 @@ public abstract class QueueSystem {
         return id;
     }
 
-    public QueueSystem(String id, NodeData data, int position) {
-        this.id = id;
-        this.position = position;
-        serviceRatio = data.getServiceRatio();
+    public Map<QueueSystem, Data> getInputs() {
+        return inputs;
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public double getUtilization() {
+        return utilization;
     }
 
     public Data getArrivalRatio() {
@@ -50,6 +63,12 @@ public abstract class QueueSystem {
 
     public void setArrivalRatio(Data arrivalRatio) {
         this.arrivalRatio = arrivalRatio;
+    }
+
+    public QueueSystem(String id, NodeData data, int position) {
+        this.id = id;
+        this.position = position;
+        serviceRatio = data.getServiceRatio();
     }
 
     public boolean validate(){
@@ -94,12 +113,9 @@ public abstract class QueueSystem {
         return activeType;
     }
 
-    public Map<QueueSystem, Data> getInputs() {
-        return inputs;
-    }
 
-    public int getPosition() {
-        return position;
+    public void calculateUtilization() {
+        utilization = arrivalRatio.sum() / serviceRatio;
     }
 
     @Override

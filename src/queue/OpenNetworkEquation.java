@@ -5,6 +5,7 @@ import org.apache.commons.math3.linear.*;
 import queue.OpenNetwork;
 import queue.systems.QueueSystem;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -16,7 +17,7 @@ public class OpenNetworkEquation {
 
     private OpenNetwork network;
     private HashMap<String, RealMatrix> matrices;
-    private HashMap<String ,RealVector> constants;
+    private HashMap<String, RealVector> constants;
 
     public OpenNetworkEquation(OpenNetwork network) {
         this.network = network;
@@ -25,38 +26,37 @@ public class OpenNetworkEquation {
 
     private void initialize() {
         Set<String> activeCustomers = network.getActiveCustomerTypes();
-        Set<QueueSystem> systems = network.getSystems();
+        Collection<QueueSystem> systems = network.getSystems();
         matrices = new HashMap<>();
         constants = new HashMap<>();
         for (String customerType : activeCustomers) {
             int dim = network.getSystems().size();
             RealVector constant = new ArrayRealVector(dim);
-            constant.setEntry(network.getStartSystem().getPosition(),network.getClientArrivalCoeff().getValue(customerType));
+            constant.setEntry(network.getStartSystem().getPosition(), network.getClientArrivalCoeff().getValue(customerType));
             RealMatrix matrix = getIdentityMatrix(dim);
             for (QueueSystem system : systems) {
                 int row = system.getPosition();
-                if (system != network.getStartSystem()) {
-                    Map<QueueSystem, Data> inputs = system.getInputs();
-                    for (Map.Entry<QueueSystem, Data> entry : inputs.entrySet()) {
-                        double value = -entry.getValue().getValue(customerType);
-                        int col = entry.getKey().getPosition();
-                        matrix.setEntry(row, col, value);
-                    }
+                Map<QueueSystem, Data> inputs = system.getInputs();
+                for (Map.Entry<QueueSystem, Data> entry : inputs.entrySet()) {
+                    double value = -entry.getValue().getValue(customerType);
+                    int col = entry.getKey().getPosition();
+                    matrix.setEntry(row, col, value);
                 }
+
             }
-            constants.put(customerType,constant);
+            constants.put(customerType, constant);
             matrices.put(customerType, matrix);
         }
     }
 
-    public Map<String,RealVector> compute(){
-        Map result = new HashMap<String,RealVector>();
-        for(String key : matrices.keySet()){
+    public Map<String, RealVector> compute() {
+        Map result = new HashMap<String, RealVector>();
+        for (String key : matrices.keySet()) {
             RealMatrix coeff = matrices.get(key);
             RealVector constant = constants.get(key);
             DecompositionSolver solver = new LUDecomposition(coeff).getSolver();
             RealVector res = solver.solve(constant);
-            result.put(key,res);
+            result.put(key, res);
         }
         return result;
     }

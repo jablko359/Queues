@@ -1,6 +1,6 @@
 package queue.systems;
 
-import queue.NodeData;
+import queue.graph.NodeData;
 
 import java.util.HashMap;
 

@@ -1,6 +1,7 @@
 package queue;
 
 import queue.graph.EdgeData;
+import queue.graph.NodeData;
 import queue.graph.QueueSerialization;
 import queue.systems.QueueSystem;
 import queue.systems.SystemType;
@@ -48,7 +49,7 @@ public class QueueBuilder {
 //        if (!network.validate()) {
 //            throw new RuntimeException("queue system not valid");
 //        }
-        network.countArrivalRatio();
+        network.calculateParameters();
         return network;
     }
 

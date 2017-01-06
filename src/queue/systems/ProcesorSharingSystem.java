@@ -1,6 +1,6 @@
 package queue.systems;
 
-import queue.NodeData;
+import queue.graph.NodeData;
 
 /**
  * Created by Igor on 03.12.2016.

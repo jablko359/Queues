@@ -1,4 +1,4 @@
-package queue;
+package queue.graph;
 
 import queue.systems.SystemType;
 

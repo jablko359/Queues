@@ -2,6 +2,7 @@
  * Created by Igor on 03.12.2016.
  */
 import queue.QueueBuilder;
+import queue.QueueNetwork;
 import queue.graph.QueueSerialization;
 
 import javax.xml.bind.JAXBException;
@@ -11,7 +12,7 @@ public class Program {
     public static void main(String[] args) throws JAXBException {
         QueueSerialization serialization = QueueSerialization.fromFile(new File("examples/Test.xml"));
         QueueBuilder builder = new QueueBuilder(serialization);
-        builder.buildQueue();
+        QueueNetwork network = builder.buildQueue();
 
     }
 }

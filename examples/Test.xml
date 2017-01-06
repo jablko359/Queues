@@ -4,8 +4,8 @@
         <entry>
             <key>1</key>
             <value>
-                <positions>2</positions>
-                <serviceRatio>0.5</serviceRatio>
+                <positions>1</positions>
+                <serviceRatio>8</serviceRatio>
                 <systemType>FIFO</systemType>
             </value>
         </entry>
@@ -13,16 +13,16 @@
             <key>2</key>
             <value>
                 <positions>1</positions>
-                <serviceRatio>3.0</serviceRatio>
+                <serviceRatio>12</serviceRatio>
                 <systemType>FIFO</systemType>
             </value>
         </entry>
         <entry>
             <key>3</key>
             <value>
-                <positions>12</positions>
-                <serviceRatio>4.0</serviceRatio>
-                <systemType>LIFO</systemType>
+                <positions>1</positions>
+                <serviceRatio>16</serviceRatio>
+                <systemType>FIFO</systemType>
             </value>
         </entry>
     </systems>
@@ -32,11 +32,11 @@
                 <values>
                     <entry>
                         <key>Student</key>
-                        <value>0.7</value>
+                        <value>0.4</value>
                     </entry>
                 </values>
             </probabilities>
-            <targetId>3</targetId>
+            <targetId>2</targetId>
             <sourceId>1</sourceId>
         </edge>
         <edge>
@@ -48,8 +48,20 @@
                     </entry>
                 </values>
             </probabilities>
-            <targetId>2</targetId>
+            <targetId>3</targetId>
             <sourceId>1</sourceId>
+        </edge>
+        <edge>
+            <probabilities>
+                <values>
+                    <entry>
+                        <key>Student</key>
+                        <value>0.6</value>
+                    </entry>
+                </values>
+            </probabilities>
+            <targetId>1</targetId>
+            <sourceId>2</sourceId>
         </edge>
         <edge>
             <probabilities>
@@ -68,7 +80,19 @@
                 <values>
                     <entry>
                         <key>Student</key>
-                        <value>0.6</value>
+                        <value>0.5</value>
+                    </entry>
+                </values>
+            </probabilities>
+            <targetId>1</targetId>
+            <sourceId>3</sourceId>
+        </edge>
+        <edge>
+            <probabilities>
+                <values>
+                    <entry>
+                        <key>Student</key>
+                        <value>0.5</value>
                     </entry>
                 </values>
             </probabilities>
@@ -82,7 +106,7 @@
         <values>
             <entry>
                 <key>Student</key>
-                <value>5.0</value>
+                <value>1.0</value>
             </entry>
         </values>
     </arrivalCoefficient>

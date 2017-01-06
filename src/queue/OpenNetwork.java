@@ -1,7 +1,10 @@
 package queue;
 
 import org.apache.commons.math3.linear.RealVector;
+import queue.systems.CalculatorFactory;
+import queue.systems.OpenNetworkCalculator;
 import queue.systems.QueueSystem;
+import queue.systems.StateProbabilityCalculator;
 
 import java.util.*;
 
@@ -16,7 +19,7 @@ public class OpenNetwork extends QueueNetwork {
 
 
     public OpenNetwork(Map<String, QueueSystem> systems, Data clientArrivalCoeff, String inputSystemId) {
-        super(new HashSet<>(systems.values()));
+        super(systems, new OpenNetworkCalculator());
         this.clientArrivalCoeff = clientArrivalCoeff;
         this.inputSystemId = inputSystemId;
         startSystem = systems.get(inputSystemId);
@@ -25,20 +28,41 @@ public class OpenNetwork extends QueueNetwork {
         }
     }
 
-
     @Override
-    public void countArrivalRatio() {
+    public void calculateParameters() {
         OpenNetworkEquation equation = new OpenNetworkEquation(this);
-        Map<String,RealVector> arrivalCoefs = equation.compute();
-        for (QueueSystem system : systems){
+        Map<String,RealVector> arrivalCoeffs = equation.compute();
+        for (QueueSystem system : systems.values()){
             int pos = system.getPosition();
             Data data = new Data();
-            for (Map.Entry<String,RealVector> vectorEntry : arrivalCoefs.entrySet()){
+            for (Map.Entry<String,RealVector> vectorEntry : arrivalCoeffs.entrySet()){
                 data.setValue(vectorEntry.getKey(),vectorEntry.getValue().getEntry(pos));
             }
             system.setArrivalRatio(data);
         }
 
+        for(QueueSystem system : systems.values()){
+            system.calculateUtilization();
+        }
+    }
+
+    @Override
+    public double getStateProbability(HashMap<String, Integer> conditionMap) {
+        if(conditionMap.isEmpty()){
+            return 0;
+        }
+        double result = 1;
+        for (Map.Entry<String,Integer> condition : conditionMap.entrySet()){
+            String systemId = condition.getKey();
+            QueueSystem system = systems.get(systemId);
+            if(system == null){
+                throw new IllegalArgumentException("System with id: " + systemId + " not found");
+            }
+            StateProbabilityCalculator calculator = calculatorFactory.getCalculator(system);
+            double stateProbability = calculator.getProbability(condition.getValue());
+            result *= stateProbability;
+        }
+        return result;
     }
 
     public QueueSystem getStartSystem() {

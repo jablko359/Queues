@@ -36,4 +36,12 @@ public class Data {
     public Map<String, Double> getMapValues() {
         return values;
     }
+
+    public double sum(){
+        double sum = 0;
+        for (double val : values.values()){
+            sum += val;
+        }
+        return sum;
+    }
 }

@@ -1,6 +1,5 @@
 package queue.graph;
 
-import queue.NodeData;
 import queue.Data;
 import queue.systems.SystemType;
 
