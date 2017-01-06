@@ -40,6 +40,25 @@ public abstract class QueueNetwork {
         return activeTypes;
     }
 
+    public double getPerformanceMeasure(){
+        double measure = 0;
+        for (QueueSystem system : systems.values()){
+            for (String customerType : activeCustomerTypes){
+                measure += system.getPerformanceMeasure(customerType);
+            }
+        }
+        return measure;
+    }
+
+    public double getPerformanceMeasure(String clientType, String systemId){
+        QueueSystem system = systems.get(systemId);
+        if(system != null){
+            return system.getPerformanceMeasure(clientType);
+        }
+        throw new IllegalArgumentException("Unknown system: " + systemId);
+    }
+
+
 
     public Set<String> getActiveCustomerTypes() {
         return activeCustomerTypes;

@@ -3,6 +3,8 @@ package queue.systems;
 import queue.graph.NodeData;
 import queue.Utils;
 
+import java.util.Map;
+
 /**
  * Created by Igor on 03.12.2016.
  */
@@ -22,6 +24,13 @@ public class FifoSystem extends QueueSystem {
     public void calculateUtilization() {
         //rho = sum(labda[r]) / mi
         utilization = arrivalRatio.sum() / (positionCount * serviceRatio);
+        for (Map.Entry<String,Double> arrival : arrivalRatio.getMapValues().entrySet()){
+            double util = arrival.getValue() / (positionCount * serviceRatio);
+            clientUtilization.setValue(arrival.getKey(),util);
+        }
+        if(utilization > 1){
+            throw new RuntimeException("Utilization rate is more than 1 (" + utilization +") for system: " + id);
+        }
         calculateZeroStateProbability();
     }
 

@@ -29,6 +29,8 @@ public abstract class QueueSystem {
     protected Map<QueueSystem, Data> outputs = new HashMap<>();
     protected Map<QueueSystem, Data> inputs = new HashMap<>();
 
+    protected Data clientUtilization = new Data();
+
     public void addOutput(QueueSystem system, Data data) {
         outputs.put(system,data);
     }
@@ -116,6 +118,18 @@ public abstract class QueueSystem {
 
     public void calculateUtilization() {
         utilization = arrivalRatio.sum() / serviceRatio;
+        for (Map.Entry<String,Double> arrival : arrivalRatio.getMapValues().entrySet()){
+            double util = arrival.getValue() / serviceRatio;
+            clientUtilization.setValue(arrival.getKey(),util);
+        }
+        if(utilization > 1){
+            throw new RuntimeException("Utilization rate is more than 1 (" + utilization +") for system: " + id);
+        }
+    }
+
+    public double getPerformanceMeasure(String clientId){
+        double clientUtil = clientUtilization.getValue(clientId);
+        return clientUtil / (1 - utilization);
     }
 
     @Override

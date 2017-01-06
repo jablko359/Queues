@@ -13,6 +13,7 @@ public class Program {
         QueueSerialization serialization = QueueSerialization.fromFile(new File("examples/Test.xml"));
         QueueBuilder builder = new QueueBuilder(serialization);
         QueueNetwork network = builder.buildQueue();
+        double K = network.getPerformanceMeasure();
 
     }
 }
