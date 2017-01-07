@@ -5,6 +5,7 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import queue.Data;
 import queue.QueueBuilder;
 import queue.QueueNetwork;
 import queue.graph.EdgeData;
@@ -31,7 +32,10 @@ public class QueueBuilderDialog {
     List<EdgeData> currentEdges = new ArrayList<>();
     List<NodeData> currentSystems = new ArrayList<>();
     QueueSerialization currentQueueSerialization = new QueueSerialization() {{
-        setInputSystemId("0");
+        setInputSystemId("1");
+        Data data = new Data();
+        data.setValue("Student",1.0);
+        setClientArrivalCoeff(data);
     }};
 
     public QueueBuilderDialog(QueueNetworkCallback queueNetworkCallback) {
@@ -95,7 +99,6 @@ public class QueueBuilderDialog {
                 data -> {
                     systemsCollectionProxy.add(data);
                     currentSystems.add(data);
-                    currentQueueSerialization.setInputSystemId("0");
                 }).show());
 
         systemsPane.getChildren().add(addSystemButton);

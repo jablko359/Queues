@@ -35,7 +35,7 @@ public class EdgeCreatorDialog {
         VBox rootView = new VBox();
 
         HBox sourceIdLayout = new HBox();
-        TextField sourceIdTextField = new TextField(String.valueOf(nextId-1));
+        TextField sourceIdTextField = new TextField(String.valueOf(nextId - 1));
         sourceIdLayout.getChildren().add(new Label("sourceId"));
         sourceIdLayout.getChildren().add(sourceIdTextField);
         rootView.getChildren().add(sourceIdLayout);
@@ -66,10 +66,12 @@ public class EdgeCreatorDialog {
             if (clickedButton == okButton) {
 
                 String targetId = targetIdTextField.getText();
+                String sourceId = sourceIdTextField.getText();
                 String person = personNameTextField.getText();
                 String value = personValueTextField.getText();
 
                 currentEdge.setTargetId(targetId);
+                currentEdge.setSourceId(sourceId);
                 Data data = new Data();
                 data.setValue(person, Double.parseDouble(value));
                 currentEdge.setProbabilities(data);
