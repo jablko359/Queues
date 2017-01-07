@@ -23,20 +23,22 @@ public class OpenNetwork extends QueueNetwork {
     }
 
     @Override
-    public void calculateParameters() throws IncorrectUtilizationException {
-        OpenNetworkEquation equation = new OpenNetworkEquation(this);
-        Map<String,RealVector> arrivalCoeffs = equation.compute();
-        for (QueueSystem system : systems.values()){
-            int pos = system.getPosition();
-            Data data = new Data();
-            for (Map.Entry<String,RealVector> vectorEntry : arrivalCoeffs.entrySet()){
-                data.setValue(vectorEntry.getKey(),vectorEntry.getValue().getEntry(pos));
+    public void calculateParameters(boolean calculateLambda) throws IncorrectUtilizationException {
+        if (calculateLambda) {
+            OpenNetworkEquation equation = new OpenNetworkEquation(this);
+            Map<String,RealVector> arrivalCoeffs = equation.compute();
+            for (QueueSystem system : systems.values()){
+                int pos = system.getPosition();
+                Data data = new Data();
+                for (Map.Entry<String,RealVector> vectorEntry : arrivalCoeffs.entrySet()){
+                    data.setValue(vectorEntry.getKey(),vectorEntry.getValue().getEntry(pos));
+                }
+                system.setClientLambda(data);
             }
-            system.setClientLambda(data);
-        }
 
-        for(QueueSystem system : systems.values()){
-            system.calculateUtilization();
+            for(QueueSystem system : systems.values()){
+                system.calculateUtilization();
+            }
         }
     }
 

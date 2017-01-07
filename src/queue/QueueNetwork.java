@@ -82,12 +82,6 @@ public abstract class QueueNetwork {
         throw new IllegalArgumentException("Unknown system: " + systemId);
     }
 
-
-
-
-
-
-
     public Set<String> getActiveCustomerTypes() {
         return activeCustomerTypes;
     }
@@ -96,9 +90,16 @@ public abstract class QueueNetwork {
         return systems.values();
     }
 
-    public abstract void calculateParameters() throws IncorrectUtilizationException;
-
     public abstract double getStateProbability(HashMap<String, Integer> coditionMap);
 
+    public Map<String, QueueSystem> getSystemsMap() {
+        return systems;
+    }
+
+    public void setSystems(Map<String, QueueSystem> systems) {
+        this.systems = systems;
+    }
+
+    public abstract void calculateParameters(boolean calculateLambdas) throws IncorrectUtilizationException;
 
 }

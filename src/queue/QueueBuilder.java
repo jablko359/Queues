@@ -50,7 +50,7 @@ public class QueueBuilder {
 //            throw new RuntimeException("queue system not valid");
 //        }
 
-        network.calculateParameters();
+        network.calculateParameters(true);
 
         return network;
     }

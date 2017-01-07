@@ -52,4 +52,7 @@ public class FifoSystem extends QueueSystem {
         return zeroStateProbability;
     }
 
+    public void setM(int m) {
+        this.m = m;
+    }
 }
