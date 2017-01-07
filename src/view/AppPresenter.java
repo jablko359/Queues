@@ -16,7 +16,7 @@ import java.io.File;
  * @since 30 gru 2016.
  * 14 : 11
  */
-public class GuiPresenter {
+public class AppPresenter {
 
     final AppCallbacks appCallbacks;
 
@@ -34,7 +34,7 @@ public class GuiPresenter {
         }
     };
 
-    public GuiPresenter(AppCallbacks connector) {
+    public AppPresenter(AppCallbacks connector) {
         this.appCallbacks = connector;
 
         showMockProgressBar();

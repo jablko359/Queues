@@ -52,7 +52,27 @@ public class QueueSerialization {
         return inputSystemId;
     }
 
-    protected QueueSerialization(){
+    public void setSystems(HashMap<String, NodeData> systems) {
+        this.systems = systems;
+    }
+
+    public void setEdges(Edges edges) {
+        this.edges = edges;
+    }
+
+    public void setClosed(boolean closed) {
+        isClosed = closed;
+    }
+
+    public void setInputSystemId(String inputSystemId) {
+        this.inputSystemId = inputSystemId;
+    }
+
+    public void setClientArrivalCoeff(Data clientArrivalCoeff) {
+        this.clientArrivalCoeff = clientArrivalCoeff;
+    }
+
+    public QueueSerialization(){
     }
 
     public static QueueSerialization fromFile(File file) throws JAXBException {

@@ -14,7 +14,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
@@ -28,16 +27,18 @@ public class App extends Application implements AppCallbacks {
         launch(args);
     }
 
-    GuiPresenter presenter;
+    AppPresenter presenter;
 
     ProgressBar progressIndicator;
 
     Button fileChooseButton;
 
+    Button createNewQueueNetworkButton;
+
     @Override
     public void start(Stage primaryStage) {
         System.out.println("start");
-        presenter = new GuiPresenter(this);
+        presenter = new AppPresenter(this);
 
         BorderPane root = new BorderPane();
 
@@ -46,12 +47,26 @@ public class App extends Application implements AppCallbacks {
         addInputFileButton(primaryStage, box);
         addProgressBar(primaryStage, box);
 
+        addQueueBuilderButton(box);
         root.setCenter(box);
 
         primaryStage.setTitle("BCMP");
 
         primaryStage.setScene(new Scene(root, 300, 250));
         primaryStage.show();
+    }
+
+    private void addQueueBuilderButton(VBox parent) {
+        createNewQueueNetworkButton = new Button("Create new queue network");
+        createNewQueueNetworkButton
+                .setOnAction(c -> new QueueBuilderDialog(queueNetwork -> {
+
+                    double K = queueNetwork.getPerformanceMeasure();
+
+                    System.out.println("Performance measure: " + K);
+                }).show());
+        parent.getChildren().add(createNewQueueNetworkButton);
+
     }
 
     private void addProgressBar(Stage primaryStage, Pane parent) {
