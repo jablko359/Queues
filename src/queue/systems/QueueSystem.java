@@ -1,5 +1,6 @@
 package queue.systems;
 
+import queue.IncorrectUtilizationException;
 import queue.graph.NodeData;
 import queue.Data;
 
@@ -18,18 +19,20 @@ public abstract class QueueSystem {
     protected int position;
 
     //lambda
-    protected Data arrivalRatio = new Data();
+    protected Data clientLambda = new Data();
     //mi
-    protected double serviceRatio;
+    protected double mi;
 
     //Rho
-    protected double utilization;
+    protected double rho;
 
+    //Input from outside world
+    protected Data outsideInput;
 
     protected Map<QueueSystem, Data> outputs = new HashMap<>();
     protected Map<QueueSystem, Data> inputs = new HashMap<>();
 
-    protected Data clientUtilization = new Data();
+    protected Data clientRho = new Data();
 
     public void addOutput(QueueSystem system, Data data) {
         outputs.put(system,data);
@@ -51,26 +54,27 @@ public abstract class QueueSystem {
         return position;
     }
 
-    public double getUtilization() {
-        return utilization;
+    public double getRho() {
+        return rho;
     }
 
-    public Data getArrivalRatio() {
-        return arrivalRatio;
+    public Data getClientLambda() {
+        return clientLambda;
     }
 
     public Map<QueueSystem, Data> getOutputs() {
         return outputs;
     }
 
-    public void setArrivalRatio(Data arrivalRatio) {
-        this.arrivalRatio = arrivalRatio;
+    public void setClientLambda(Data clientLambda) {
+        this.clientLambda = clientLambda;
     }
 
     public QueueSystem(String id, NodeData data, int position) {
         this.id = id;
         this.position = position;
-        serviceRatio = data.getServiceRatio();
+        this.outsideInput = data.getOutsideInput();
+        mi = data.getMi();
     }
 
     public boolean validate(){
@@ -116,20 +120,24 @@ public abstract class QueueSystem {
     }
 
 
-    public void calculateUtilization() {
-        utilization = arrivalRatio.sum() / serviceRatio;
-        for (Map.Entry<String,Double> arrival : arrivalRatio.getMapValues().entrySet()){
-            double util = arrival.getValue() / serviceRatio;
-            clientUtilization.setValue(arrival.getKey(),util);
+    public void calculateUtilization() throws IncorrectUtilizationException {
+        rho = clientLambda.sum() / mi;
+        for (Map.Entry<String,Double> arrival : clientLambda.getMapValues().entrySet()){
+            double util = arrival.getValue() / mi;
+            clientRho.setValue(arrival.getKey(),util);
         }
-        if(utilization > 1){
-            throw new RuntimeException("Utilization rate is more than 1 (" + utilization +") for system: " + id);
+        if(rho > 1){
+            throw new IncorrectUtilizationException(id,rho);
         }
     }
 
     public double getPerformanceMeasure(String clientId){
-        double clientUtil = clientUtilization.getValue(clientId);
-        return clientUtil / (1 - utilization);
+        double clientUtil = clientRho.getValue(clientId);
+        return clientUtil / (1 - rho);
+    }
+
+    public Data getOutsideInput() {
+        return outsideInput;
     }
 
     @Override

@@ -78,9 +78,9 @@ public class SystemCreatorDialog {
                     return null;
                 }
 
-                currentNodeData.setPositions(Integer.valueOf(id));
+                currentNodeData.setM(Integer.valueOf(id));
                 currentNodeData.setSystemType(SystemType.valueOf(systemTypeSelected));
-                currentNodeData.setServiceRatio(Double.parseDouble(serviceRatioSelected));
+                currentNodeData.setMi(Double.parseDouble(serviceRatioSelected));
 
                 return currentNodeData;
             } else return null;

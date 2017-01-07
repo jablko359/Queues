@@ -68,7 +68,7 @@ public abstract class QueueNetwork {
         return systems.values();
     }
 
-    public abstract void calculateParameters();
+    public abstract void calculateParameters() throws IncorrectUtilizationException;
 
     public abstract double getStateProbability(HashMap<String, Integer> coditionMap);
 
