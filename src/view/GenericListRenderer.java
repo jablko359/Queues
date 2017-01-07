@@ -20,7 +20,7 @@ import javafx.scene.layout.Pane;
 import java.util.List;
 import java.util.UUID;
 
-public class GenericListCrazyImpl<ANY> {
+public class GenericListRenderer<ANY> {
 
     public int nextId() {
         return anyObservableList.size();
@@ -30,7 +30,7 @@ public class GenericListCrazyImpl<ANY> {
         Node recycle(ANY item);
     }
 
-    public GenericListCrazyImpl(Callback<ANY> callback) {
+    public GenericListRenderer(Callback<ANY> callback) {
         this.callback = callback;
     }
 

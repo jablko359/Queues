@@ -50,8 +50,8 @@ public class QueueBuilderDialog {
         VBox edgesPane = new VBox();
         VBox systemsPane = new VBox();
 
-        GenericListCrazyImpl<EdgeData> edgesCollectionProxy = new GenericListCrazyImpl<>(
-                new GenericListCrazyImpl.Callback<EdgeData>() {
+        GenericListRenderer<EdgeData> edgesCollectionProxy = new GenericListRenderer<>(
+                new GenericListRenderer.Callback<EdgeData>() {
 
                     @Override
                     public Node recycle(EdgeData item) {
@@ -67,7 +67,7 @@ public class QueueBuilderDialog {
                 });
 
 
-        GenericListCrazyImpl<NodeData> systemsCollectionProxy = new GenericListCrazyImpl<>(new GenericListCrazyImpl.Callback<NodeData>() {
+        GenericListRenderer<NodeData> systemsCollectionProxy = new GenericListRenderer<>(new GenericListRenderer.Callback<NodeData>() {
 
             @Override
             public Node recycle(NodeData item) {
