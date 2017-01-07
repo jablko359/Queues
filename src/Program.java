@@ -5,6 +5,7 @@ import queue.IncorrectUtilizationException;
 import queue.QueueBuilder;
 import queue.QueueNetwork;
 import queue.graph.QueueSerialization;
+import view.SystemCreatorDialog;
 
 import javax.xml.bind.JAXBException;
 import java.io.File;
@@ -16,6 +17,8 @@ public class Program {
             QueueBuilder builder = new QueueBuilder(serialization);
             QueueNetwork network = builder.buildQueue();
             double K = network.getPerformanceMeasure();
+            double Q = network.getSumQ();
+            System.out.print("");
         } catch (IncorrectUtilizationException ex){
             ex.printStackTrace();
         }

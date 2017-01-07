@@ -51,4 +51,5 @@ public class FifoSystem extends QueueSystem {
     public double getZeroStateProbability() {
         return zeroStateProbability;
     }
+
 }

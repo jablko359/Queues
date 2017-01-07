@@ -40,7 +40,7 @@ public abstract class QueueNetwork {
         return activeTypes;
     }
 
-    public double getPerformanceMeasure(){
+    public double getK(){
         double measure = 0;
         for (QueueSystem system : systems.values()){
             for (String customerType : activeCustomerTypes){
@@ -50,13 +50,41 @@ public abstract class QueueNetwork {
         return measure;
     }
 
-    public double getPerformanceMeasure(String clientType, String systemId){
+    public double getK(String clientType, String systemId){
         QueueSystem system = systems.get(systemId);
         if(system != null){
             return system.getPerformanceMeasure(clientType);
         }
         throw new IllegalArgumentException("Unknown system: " + systemId);
     }
+
+    public double getQ(String systemId ,String clientId){
+        QueueSystem system = systems.get(systemId);
+        if(system != null){
+            return system.calculateQ(clientId);
+        }
+        throw new IllegalArgumentException("Unknown system: " + systemId);
+    }
+
+    public double getW(String systemId ,String clientId){
+        QueueSystem system = systems.get(systemId);
+        if(system != null){
+            return system.calculateW(clientId);
+        }
+        throw new IllegalArgumentException("Unknown system: " + systemId);
+    }
+
+    public double getT(String systemId ,String clientId){
+        QueueSystem system = systems.get(systemId);
+        if(system != null){
+            return system.calculateT(clientId);
+        }
+        throw new IllegalArgumentException("Unknown system: " + systemId);
+    }
+
+
+
+
 
 
 
@@ -71,5 +99,6 @@ public abstract class QueueNetwork {
     public abstract void calculateParameters() throws IncorrectUtilizationException;
 
     public abstract double getStateProbability(HashMap<String, Integer> coditionMap);
+
 
 }
