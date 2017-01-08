@@ -35,10 +35,9 @@ public class OpenNetwork extends QueueNetwork {
                 }
                 system.setClientLambda(data);
             }
-
-            for(QueueSystem system : systems.values()){
-                system.calculateUtilization();
-            }
+        }
+        for(QueueSystem system : systems.values()){
+            system.calculateUtilization();
         }
     }
 

@@ -1,5 +1,6 @@
 package queue.bees;
 
+import queue.IncorrectUtilizationException;
 import queue.QueueNetwork;
 import queue.systems.FifoSystem;
 import queue.systems.QueueSystem;
@@ -12,10 +13,12 @@ import java.util.*;
 public class BeeAlgorithm {
 
 	private static final int MIN_CHANNEL = 1;
-	private static final int MAX_CHANNEL = 15;
+	private static final int MAX_CHANNEL = 20;
+
+	private static final int TTL = 10;
 
 	//    ilosc iteracji algorytmu
-	private static Integer ITERATIONS_NUMBER = 1000;
+	private static Integer ITERATIONS_NUMBER = 10000;
 
 	//siec
 	private QueueNetwork network;
@@ -61,9 +64,9 @@ public class BeeAlgorithm {
 		this.exclusiveSolutionsNeighberhoodNumber = exclusiveSolutionsNeighberhoodNumber;
 	}
 
-	public void createFirstPopulation() {
+	public void createBees(int numberOfBees) {
 		//utworz wspolrzedne z min i max iloscia kanalow
-		for (int i = 0; i < totalSolutionsNumber; i++) {
+		for (int i = 0; i < numberOfBees; i++) {
 			Map<DziekanatNodeType, Integer> coordinates = new HashMap<>();
 			coordinates.put(DziekanatNodeType.DZIENNE, BeeCoordinates.getRandomChannel(MIN_CHANNEL, MAX_CHANNEL));
 			coordinates.put(DziekanatNodeType.ZAOCZNE, BeeCoordinates.getRandomChannel(MIN_CHANNEL, MAX_CHANNEL));
@@ -71,29 +74,24 @@ public class BeeAlgorithm {
 			coordinates.put(DziekanatNodeType.SOCJALNE, BeeCoordinates.getRandomChannel(MIN_CHANNEL, MAX_CHANNEL));
 			coordinates.put(DziekanatNodeType.DZIEKAN, BeeCoordinates.getRandomChannel(MIN_CHANNEL, MAX_CHANNEL));
 
-			Bee bee = new Bee(0, coordinates);
+			Bee bee = new Bee(TTL, coordinates);
 
-			Map<String, QueueSystem> systems = network.getSystemsMap();
-			((FifoSystem) systems.get(DziekanatNodeType.DZIENNE.toString().toLowerCase())).setM(coordinates.get(DziekanatNodeType.DZIENNE));
-			((FifoSystem) systems.get(DziekanatNodeType.ZAOCZNE.toString().toLowerCase())).setM(coordinates.get(DziekanatNodeType.ZAOCZNE));
-			((FifoSystem) systems.get(DziekanatNodeType.SOCJALNE.toString().toLowerCase())).setM(coordinates.get(DziekanatNodeType.SOCJALNE));
-			((FifoSystem) systems.get(DziekanatNodeType.DZIEKAN.toString().toLowerCase())).setM(coordinates.get(DziekanatNodeType.DZIEKAN));
-			((FifoSystem) systems.get(DziekanatNodeType.DOKTORANCKIE.toString().toLowerCase())).setM(coordinates.get(DziekanatNodeType.DOKTORANCKIE));
+			updateM(bee);
 
 			//TODO TYMCZASOWE LOSOWANIE
 			//pobrac czas przebywania w kolejce
 //            double queeTime = network.getTimeInQuee();
-			double queeTime = (double) BeeCoordinates.getRandomChannel(0, 100);
-			bee.setQuality(calculateQuality(queeTime));
+//			double queeTime = (double) BeeCoordinates.getRandomChannel(0, 100);
+			bee.setQuality(calculateQuality(bee));
 			bees.add(bee);
 		}
 
 	}
 
 	//metoda initialize utworzy nam listy najlepszych, elitarnych oraz wszystkich pszczol
-	public void initialize(Integer beeTimeToLive) {
+	public void initialize() {
 		bees = new ArrayList<>();
-		createFirstPopulation();
+		createBees(totalSolutionsNumber);
 
 		//sort array
 		Collections.sort(bees);
@@ -109,15 +107,22 @@ public class BeeAlgorithm {
 
 		//Najlepsza z pszczółek początkowych
 		globalBestBees.add(exclusiveBees.get(0));
-		System.out.println("GLOBAL SOLUTION:" + exclusiveBees.get(0).getQuality());
+		System.out.println(iterationIndex + ". " + bees.get(0) + "\n");
 		while (ITERATIONS_NUMBER > iterationIndex) {
 //			System.out.println("Iteracja:" + (iterationIndex + 1));
+
+			updateExclusiveAndBest();
+
 			List<Bee> newExclusiveBees = generateNewBestBee(2, exclusiveBees);
 			List<Bee> newBestBees = generateNewBestBee(1, bestBees);
 
 			//Tworzymy nową listę pszczółek do kolejnego kroku algorytmu
 			bees.removeAll(exclusiveBees);
 			bees.removeAll(bestBees);
+
+			//Decrease TTL
+			decreaseTTL();
+
 			bees.addAll(newExclusiveBees);
 			bees.addAll(newBestBees);
 			Collections.sort(bees);
@@ -127,8 +132,7 @@ public class BeeAlgorithm {
 			//Index listy odpowiada iteracji algorytmu dlatego w przypadku braku poprawy przepisujemy najlepszą starą wartość
 			if (newExclusiveBees.get(0).getQuality() < globalBestBees.get(globalBestBees.size()-1).getQuality()) {
 				globalBestBees.add(newExclusiveBees.get(0));
-				System.out.println("GLOBAL SOLUTION:" + newExclusiveBees.get(0).getQuality());
-				System.out.println(bees.get(0));
+				System.out.println(iterationIndex + ". " + newExclusiveBees.get(0) + "\n");
 			} else {
 				globalBestBees.add(globalBestBees.get(globalBestBees.size()-1));
 			}
@@ -145,8 +149,10 @@ public class BeeAlgorithm {
 					newBee.getCoordinates().put((DziekanatNodeType) entry.getKey(), BeeCoordinates.getRandomChannel(MIN_CHANNEL, MAX_CHANNEL, (Integer) entry.getValue()));
 					if (!newOrdinaryBees.stream().anyMatch(b -> b.getCoordinates().get(entry.getKey()).equals(newBee.getCoordinates().get(entry.getKey())))) {
 						//TODO tymczasowy randomowy nowy współczynnik
-						double queeTime = (double) BeeCoordinates.getRandomChannel(0, 100);
-						newBee.setQuality(queeTime);
+//						double queeTime = (double) BeeCoordinates.getRandomChannel(0, 100);
+						updateM(newBee);
+						newBee.setTimeToLive(TTL);
+						newBee.setQuality(calculateQuality(bee));
 						newOrdinaryBees.add(newBee);
 					}
 					if (newOrdinaryBees.size() == bee.getCoordinates().size()*importanceFactor) {
@@ -163,9 +169,58 @@ public class BeeAlgorithm {
 		return newBestBees;
 	}
 
-	private double calculateQuality(double waitTime) {
-		//TODO
-		//Obliczyc funkcje celu
-		return waitTime;
+	private double calculateQuality(Bee bee) {
+		//średni czas oczekiwania w kolejce
+		Double averageTime = 0.0;
+		int numberOfChannels = 0;
+		for (String customer : network.getActiveCustomerTypes()) {
+			averageTime += network.getW(DziekanatNodeType.DZIENNE.toString().toLowerCase(), customer);
+			averageTime += network.getW(DziekanatNodeType.ZAOCZNE.toString().toLowerCase(), customer);
+			averageTime += network.getW(DziekanatNodeType.SOCJALNE.toString().toLowerCase(), customer);
+			averageTime += network.getW(DziekanatNodeType.DOKTORANCKIE.toString().toLowerCase(), customer);
+			averageTime += network.getW(DziekanatNodeType.DZIEKAN.toString().toLowerCase(), customer);
+		}
+
+		for (Map.Entry entry : bee.getCoordinates().entrySet()) {
+			numberOfChannels += (int) entry.getValue();
+		}
+
+		averageTime = averageTime / (network.getActiveCustomerTypes().size() * 5);
+
+		//TODO Funkcja celu
+		return Math.abs(averageTime * 1000) + numberOfChannels * 1;
+	}
+
+	private void updateM(Bee bee) {
+		Map<String, QueueSystem> systems = network.getSystemsMap();
+		((FifoSystem) systems.get(DziekanatNodeType.DZIENNE.toString().toLowerCase())).setM(bee.getCoordinates().get(DziekanatNodeType.DZIENNE));
+		((FifoSystem) systems.get(DziekanatNodeType.ZAOCZNE.toString().toLowerCase())).setM(bee.getCoordinates().get(DziekanatNodeType.ZAOCZNE));
+		((FifoSystem) systems.get(DziekanatNodeType.SOCJALNE.toString().toLowerCase())).setM(bee.getCoordinates().get(DziekanatNodeType.SOCJALNE));
+		((FifoSystem) systems.get(DziekanatNodeType.DZIEKAN.toString().toLowerCase())).setM(bee.getCoordinates().get(DziekanatNodeType.DZIEKAN));
+		((FifoSystem) systems.get(DziekanatNodeType.DOKTORANCKIE.toString().toLowerCase())).setM(bee.getCoordinates().get(DziekanatNodeType.DOKTORANCKIE));
+
+		try {
+			network.calculateParameters(false);
+		} catch (IncorrectUtilizationException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void decreaseTTL() {
+		List<Bee> beesToRemove = new ArrayList<>();
+		for (Bee bee : bees) {
+			bee.setTimeToLive(bee.getTimeToLive() - 1);
+			if (bee.getTimeToLive().equals(0)) {
+				beesToRemove.add(bee);
+			}
+		}
+
+		bees.removeAll(beesToRemove);
+		createBees(beesToRemove.size());
+	}
+
+	private void updateExclusiveAndBest() {
+		exclusiveBees = new ArrayList<>(bees.subList(0, exclusiveSolutionsNumber));
+		bestBees =  new ArrayList<>(bees.subList(exclusiveSolutionsNumber, exclusiveSolutionsNumber + bestSolutionsNumber));
 	}
 }
