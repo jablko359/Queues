@@ -5,12 +5,16 @@
             <key>dzienne</key>
             <value>
                 <m>1</m>
-                <mi>12</mi>
+                <mi>2</mi>
                 <outsideInput>
                     <values>
                         <entry>
                             <key>Student</key>
-                            <value>0.4</value>
+                            <value>0.6</value>
+                        </entry>
+                        <entry>
+                            <key>Pracownik</key>
+                            <value>0.3</value>
                         </entry>
                     </values>
                 </outsideInput>
@@ -21,12 +25,16 @@
             <key>zaoczne</key>
             <value>
                 <m>1</m>
-                <mi>4</mi>
+                <mi>2</mi>
                 <outsideInput>
                     <values>
                         <entry>
                             <key>Student</key>
-                            <value>0.2</value>
+                            <value>0.1</value>
+                        </entry>
+                        <entry>
+                            <key>Pracownik</key>
+                            <value>0.1</value>
                         </entry>
                     </values>
                 </outsideInput>
@@ -42,7 +50,11 @@
                     <values>
                         <entry>
                             <key>Student</key>
-                            <value>0.2</value>
+                            <value>0.1</value>
+                        </entry>
+                        <entry>
+                            <key>Pracownik</key>
+                            <value>0.1</value>
                         </entry>
                     </values>
                 </outsideInput>
@@ -53,12 +65,16 @@
             <key>socjalne</key>
             <value>
                 <m>1</m>
-                <mi>8</mi>
+                <mi>2</mi>
                 <outsideInput>
                     <values>
                         <entry>
                             <key>Student</key>
                             <value>0.1</value>
+                        </entry>
+                        <entry>
+                            <key>Pracownik</key>
+                            <value>0.0</value>
                         </entry>
                     </values>
                 </outsideInput>
@@ -76,6 +92,10 @@
                             <key>Student</key>
                             <value>0.1</value>
                         </entry>
+                        <entry>
+                            <key>Pracownik</key>
+                            <value>0.5</value>
+                        </entry>
                     </values>
                 </outsideInput>
                 <systemType>FIFO</systemType>
@@ -88,11 +108,11 @@
                 <values>
                     <entry>
                         <key>Student</key>
-                        <value>0.1</value>
+                        <value>0.0</value>
                     </entry>
                     <entry>
                         <key>Pracownik</key>
-                        <value>0.1</value>
+                        <value>0.0</value>
                     </entry>
                 </values>
             </probabilities>
@@ -104,11 +124,11 @@
                 <values>
                     <entry>
                         <key>Student</key>
-                        <value>0.05</value>
+                        <value>0.0</value>
                     </entry>
                     <entry>
                         <key>Pracownik</key>
-                        <value>0.2</value>
+                        <value>0.0</value>
                     </entry>
                 </values>
             </probabilities>
@@ -120,11 +140,11 @@
                 <values>
                     <entry>
                         <key>Student</key>
-                        <value>0.2</value>
+                        <value>0.1</value>
                     </entry>
                     <entry>
                         <key>Pracownik</key>
-                        <value>0.1</value>
+                        <value>0.0</value>
                     </entry>
                 </values>
             </probabilities>
@@ -136,11 +156,11 @@
                 <values>
                     <entry>
                         <key>Student</key>
-                        <value>0.15</value>
+                        <value>0.1</value>
                     </entry>
                     <entry>
                         <key>Pracownik</key>
-                        <value>0.25</value>
+                        <value>0.2</value>
                     </entry>
                 </values>
             </probabilities>
@@ -152,11 +172,11 @@
                 <values>
                     <entry>
                         <key>Student</key>
-                        <value>0.1</value>
+                        <value>0.0</value>
                     </entry>
                     <entry>
                         <key>Pracownik</key>
-                        <value>0.1</value>
+                        <value>0.0</value>
                     </entry>
                 </values>
             </probabilities>
@@ -168,11 +188,11 @@
                 <values>
                     <entry>
                         <key>Student</key>
-                        <value>0.05</value>
+                        <value>0.0</value>
                     </entry>
                     <entry>
                         <key>Pracownik</key>
-                        <value>0.2</value>
+                        <value>0.0</value>
                     </entry>
                 </values>
             </probabilities>
@@ -184,11 +204,11 @@
                 <values>
                     <entry>
                         <key>Student</key>
-                        <value>0.2</value>
+                        <value>0.0</value>
                     </entry>
                     <entry>
                         <key>Pracownik</key>
-                        <value>0.1</value>
+                        <value>0.0</value>
                     </entry>
                 </values>
             </probabilities>
@@ -200,11 +220,11 @@
                 <values>
                     <entry>
                         <key>Student</key>
-                        <value>0.15</value>
+                        <value>0.1</value>
                     </entry>
                     <entry>
                         <key>Pracownik</key>
-                        <value>0.25</value>
+                        <value>0.1</value>
                     </entry>
                 </values>
             </probabilities>
@@ -216,11 +236,11 @@
                 <values>
                     <entry>
                         <key>Student</key>
-                        <value>0.1</value>
+                        <value>0.0</value>
                     </entry>
                     <entry>
                         <key>Pracownik</key>
-                        <value>0.1</value>
+                        <value>0.0</value>
                     </entry>
                 </values>
             </probabilities>
@@ -232,11 +252,11 @@
                 <values>
                     <entry>
                         <key>Student</key>
-                        <value>0.05</value>
+                        <value>0.0</value>
                     </entry>
                     <entry>
                         <key>Pracownik</key>
-                        <value>0.15</value>
+                        <value>0.0</value>
                     </entry>
                 </values>
             </probabilities>
@@ -248,11 +268,11 @@
                 <values>
                     <entry>
                         <key>Student</key>
-                        <value>0.15</value>
+                        <value>0.0</value>
                     </entry>
                     <entry>
                         <key>Pracownik</key>
-                        <value>0.2</value>
+                        <value>0.0</value>
                     </entry>
                 </values>
             </probabilities>
@@ -264,7 +284,7 @@
                 <values>
                     <entry>
                         <key>Student</key>
-                        <value>0.15</value>
+                        <value>0.1</value>
                     </entry>
                     <entry>
                         <key>Pracownik</key>
@@ -280,11 +300,11 @@
                 <values>
                     <entry>
                         <key>Student</key>
-                        <value>0.1</value>
+                        <value>0.0</value>
                     </entry>
                     <entry>
                         <key>Pracownik</key>
-                        <value>0.1</value>
+                        <value>0.0</value>
                     </entry>
                 </values>
             </probabilities>
@@ -296,11 +316,11 @@
                 <values>
                     <entry>
                         <key>Student</key>
-                        <value>0.05</value>
+                        <value>0.00</value>
                     </entry>
                     <entry>
                         <key>Pracownik</key>
-                        <value>0.2</value>
+                        <value>0.0</value>
                     </entry>
                 </values>
             </probabilities>
@@ -312,11 +332,11 @@
                 <values>
                     <entry>
                         <key>Student</key>
-                        <value>0.2</value>
+                        <value>0.0</value>
                     </entry>
                     <entry>
                         <key>Pracownik</key>
-                        <value>0.1</value>
+                        <value>0.0</value>
                     </entry>
                 </values>
             </probabilities>
@@ -328,11 +348,11 @@
                 <values>
                     <entry>
                         <key>Student</key>
-                        <value>0.15</value>
+                        <value>0.1</value>
                     </entry>
                     <entry>
                         <key>Pracownik</key>
-                        <value>0.25</value>
+                        <value>0.0</value>
                     </entry>
                 </values>
             </probabilities>
@@ -344,11 +364,11 @@
                 <values>
                     <entry>
                         <key>Student</key>
-                        <value>0.1</value>
+                        <value>0.0</value>
                     </entry>
                     <entry>
                         <key>Pracownik</key>
-                        <value>0.1</value>
+                        <value>0.0</value>
                     </entry>
                 </values>
             </probabilities>
@@ -360,11 +380,11 @@
                 <values>
                     <entry>
                         <key>Student</key>
-                        <value>0.05</value>
+                        <value>0.0</value>
                     </entry>
                     <entry>
                         <key>Pracownik</key>
-                        <value>0.2</value>
+                        <value>0.0</value>
                     </entry>
                 </values>
             </probabilities>
@@ -376,11 +396,11 @@
                 <values>
                     <entry>
                         <key>Student</key>
-                        <value>0.2</value>
+                        <value>0.0</value>
                     </entry>
                     <entry>
                         <key>Pracownik</key>
-                        <value>0.1</value>
+                        <value>0.0</value>
                     </entry>
                 </values>
             </probabilities>
@@ -392,11 +412,11 @@
                 <values>
                     <entry>
                         <key>Student</key>
-                        <value>0.15</value>
+                        <value>0.0</value>
                     </entry>
                     <entry>
                         <key>Pracownik</key>
-                        <value>0.25</value>
+                        <value>0.0</value>
                     </entry>
                 </values>
             </probabilities>

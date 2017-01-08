@@ -18,7 +18,7 @@ public class BeeAlgorithm {
 	private static final int TTL = 10;
 
 	//    ilosc iteracji algorytmu
-	private static Integer ITERATIONS_NUMBER = 10000;
+	private static Integer ITERATIONS_NUMBER = 200000;
 
 	//siec
 	private QueueNetwork network;
@@ -152,7 +152,7 @@ public class BeeAlgorithm {
 //						double queeTime = (double) BeeCoordinates.getRandomChannel(0, 100);
 						updateM(newBee);
 						newBee.setTimeToLive(TTL);
-						newBee.setQuality(calculateQuality(bee));
+						newBee.setQuality(calculateQuality(newBee));
 						newOrdinaryBees.add(newBee);
 					}
 					if (newOrdinaryBees.size() == bee.getCoordinates().size()*importanceFactor) {
@@ -174,21 +174,21 @@ public class BeeAlgorithm {
 		Double averageTime = 0.0;
 		int numberOfChannels = 0;
 		for (String customer : network.getActiveCustomerTypes()) {
-			averageTime += network.getW(DziekanatNodeType.DZIENNE.toString().toLowerCase(), customer);
-			averageTime += network.getW(DziekanatNodeType.ZAOCZNE.toString().toLowerCase(), customer);
-			averageTime += network.getW(DziekanatNodeType.SOCJALNE.toString().toLowerCase(), customer);
-			averageTime += network.getW(DziekanatNodeType.DOKTORANCKIE.toString().toLowerCase(), customer);
-			averageTime += network.getW(DziekanatNodeType.DZIEKAN.toString().toLowerCase(), customer);
+			averageTime += network.getLambdaT(DziekanatNodeType.DZIENNE.toString().toLowerCase(), customer);
+			averageTime += network.getLambdaT(DziekanatNodeType.ZAOCZNE.toString().toLowerCase(), customer);
+			averageTime += network.getLambdaT(DziekanatNodeType.SOCJALNE.toString().toLowerCase(), customer);
+			averageTime += network.getLambdaT(DziekanatNodeType.DOKTORANCKIE.toString().toLowerCase(), customer);
+			averageTime += network.getLambdaT(DziekanatNodeType.DZIEKAN.toString().toLowerCase(), customer);
 		}
 
 		for (Map.Entry entry : bee.getCoordinates().entrySet()) {
 			numberOfChannels += (int) entry.getValue();
 		}
 
-		averageTime = averageTime / (network.getActiveCustomerTypes().size() * 5);
+//		averageTime = averageTime / (network.getActiveCustomerTypes().size() * 5);
 
 		//TODO Funkcja celu
-		return Math.abs(averageTime * 1000) + numberOfChannels * 1;
+		return averageTime * 100 + numberOfChannels * 200;
 	}
 
 	private void updateM(Bee bee) {

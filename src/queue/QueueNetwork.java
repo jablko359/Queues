@@ -74,6 +74,14 @@ public abstract class QueueNetwork {
         throw new IllegalArgumentException("Unknown system: " + systemId);
     }
 
+    public double getLambdaT(String systemId ,String clientId){
+        QueueSystem system = systems.get(systemId);
+        if(system != null){
+            return system.getPerformanceMeasure(clientId);
+        }
+        throw new IllegalArgumentException("Unknown system: " + systemId);
+    }
+
     public double getT(String systemId ,String clientId){
         QueueSystem system = systems.get(systemId);
         if(system != null){

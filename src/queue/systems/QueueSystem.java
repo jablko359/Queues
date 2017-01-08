@@ -154,7 +154,10 @@ public abstract class QueueSystem {
     public double calculateT(String clientType) {
         //7.43 EQ
         double K = this.getPerformanceMeasure(clientType);
-        return K / mi;
+        if (this.clientLambda.getValue(clientType) == 0) {
+            return 0;
+        }
+        return K / this.clientLambda.getValue(clientType);
     }
 
     public double calculateW(String clientType) {
