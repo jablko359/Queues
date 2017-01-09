@@ -31,7 +31,7 @@ public class FifoSystem extends QueueSystem {
             double util = arrival.getValue() / (m * mi);
             clientRho.setValue(arrival.getKey(), util);
         }
-        if (rho > 1) {
+        if (rho >= 1) {
             throw new IncorrectUtilizationException(id, rho);
         }
         calculateZeroStateProbability();
@@ -53,6 +53,9 @@ public class FifoSystem extends QueueSystem {
 
     @Override
     public double getPerformanceMeasure(String clientId) {
+        if(m == 1){
+            return super.getPerformanceMeasure(clientId);
+        }
         double clientTypeRho = clientRho.getValue(clientId);
         double Kir = m * clientTypeRho + (clientTypeRho / (1 - rho)) * Pm;
         return Kir;

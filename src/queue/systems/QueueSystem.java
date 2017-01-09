@@ -126,7 +126,7 @@ public abstract class QueueSystem {
             double util = arrival.getValue() / mi;
             clientRho.setValue(arrival.getKey(), util);
         }
-        if (rho > 1) {
+        if (rho >= 1) {
             throw new IncorrectUtilizationException(id, rho);
         }
     }
