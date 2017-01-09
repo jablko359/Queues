@@ -4,7 +4,7 @@ package queue;
  * Created by Igor on 06.01.2017.
  */
 public class Utils {
-    public static int factorial(int arg) {
+    public static long factorial(int arg) {
         if(arg == 0) {
             return  1;
         } else if (arg < 0){
