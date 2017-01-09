@@ -10,7 +10,7 @@ public class Utils {
         } else if (arg < 0){
             throw new ArithmeticException("Argument cannot be lower than 0");
         }
-        int result = 1;
+        long result = 1;
         for (int i = 1; i <= arg; i++){
             result *= i;
         }
