@@ -16,8 +16,10 @@ public class FifoSystem extends QueueSystem {
 
     private double zeroStateProbability;
 
-    public FifoSystem(String id, NodeData node, int position){
-        super(id, node,position);
+    private double Pm;
+
+    public FifoSystem(String id, NodeData node, int position) {
+        super(id, node, position);
         m = node.getM();
     }
 
@@ -25,23 +27,35 @@ public class FifoSystem extends QueueSystem {
     public void calculateUtilization() throws IncorrectUtilizationException {
         //rho = sum(labda[r]) / mi
         rho = clientLambda.sum() / (m * mi);
-        for (Map.Entry<String,Double> arrival : clientLambda.getMapValues().entrySet()){
+        for (Map.Entry<String, Double> arrival : clientLambda.getMapValues().entrySet()) {
             double util = arrival.getValue() / (m * mi);
-            clientRho.setValue(arrival.getKey(),util);
+            clientRho.setValue(arrival.getKey(), util);
         }
-        if(rho > 1){
-            throw new IncorrectUtilizationException(id,rho);
+        if (rho > 1) {
+            throw new IncorrectUtilizationException(id, rho);
         }
         calculateZeroStateProbability();
+        calculatePm();
     }
 
-    private void calculateZeroStateProbability(){
+    private void calculateZeroStateProbability() {
         double sum = 0;
         //6.26 equation from Wiley Interscience Queueing Networks
-        for(int k = 0; k < m; k++){
-            sum += (Math.pow(m * rho,k)/ Utils.factorial(k)) + ((Math.pow(m * rho, m)/Utils.factorial(m)) * (1/(1 - rho)));
+        for (int k = 0; k < m; k++) {
+            sum += (Math.pow(m * rho, k) / Utils.factorial(k)) + ((Math.pow(m * rho, m) / Utils.factorial(m)) * (1 / (1 - rho)));
         }
-        zeroStateProbability = 1/sum;
+        zeroStateProbability = 1 / sum;
+    }
+
+    private void calculatePm() {
+        Pm = (Math.pow(m * rho, m) / (Utils.factorial(m) * (1 - rho))) * zeroStateProbability;
+    }
+
+    @Override
+    public double getPerformanceMeasure(String clientId) {
+        double clientTypeRho = clientRho.getValue(clientId);
+        double Kir = m * clientTypeRho + (clientTypeRho / (1 - rho)) * Pm;
+        return Kir;
     }
 
     public int getM() {
