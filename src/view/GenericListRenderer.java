@@ -26,6 +26,7 @@ public class GenericListRenderer<ANY> {
         return anyObservableList.size();
     }
 
+    @FunctionalInterface
     public interface Callback<ANY> {
         Node recycle(ANY item);
     }

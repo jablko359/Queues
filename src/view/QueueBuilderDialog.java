@@ -14,6 +14,7 @@ import queue.graph.EdgeData;
 import queue.graph.Edges;
 import queue.graph.NodeData;
 import queue.graph.QueueSerialization;
+import view.GenericListRenderer.Callback;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -56,9 +57,7 @@ public class QueueBuilderDialog {
         VBox edgesPane = new VBox();
         VBox systemsPane = new VBox();
 
-        GenericListRenderer<EdgeData> edgesCollectionProxy = new GenericListRenderer<>(
-                new GenericListRenderer.Callback<EdgeData>() {
-
+        GenericListRenderer<EdgeData> edgesCollectionProxy = new GenericListRenderer<>(new Callback<EdgeData>() {
                     @Override
                     public Node recycle(EdgeData item) {
                         Map<String, Double> txt = item.getProbabilities().getMapValues();
@@ -73,7 +72,7 @@ public class QueueBuilderDialog {
                 });
 
 
-        GenericListRenderer<NodeData> systemsCollectionProxy = new GenericListRenderer<>(new GenericListRenderer.Callback<NodeData>() {
+        GenericListRenderer<NodeData> systemsCollectionProxy = new GenericListRenderer<>(new Callback<NodeData>() {
 
             @Override
             public Node recycle(NodeData item) {
