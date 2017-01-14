@@ -21,7 +21,7 @@ public class QueueBuilder {
     }
 
 
-    public QueueNetwork buildQueue() {
+    public QueueNetwork buildQueue() throws IncorrectUtilizationException {
         int counter = 0;
         HashMap<String, NodeData> nodes = queueSerialization.getSystems();
         HashMap<String, QueueSystem> systems = new HashMap<>();
@@ -44,12 +44,14 @@ public class QueueBuilder {
         if (queueSerialization.isClosed()) {
             return null;
         } else {
-            network = new OpenNetwork(systems, queueSerialization.getClientArrivalCoeff(), queueSerialization.getInputSystemId());
+            network = new OpenNetwork(systems, queueSerialization.getClientLambdas());
         }
 //        if (!network.validate()) {
 //            throw new RuntimeException("queue system not valid");
 //        }
-        network.calculateParameters();
+
+        network.calculateParameters(true);
+
         return network;
     }
 

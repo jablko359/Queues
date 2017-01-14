@@ -2,6 +2,7 @@ package view;
 
 
 
+import queue.IncorrectUtilizationException;
 import queue.QueueBuilder;
 import queue.QueueNetwork;
 import queue.graph.QueueSerialization;
@@ -65,13 +66,19 @@ public class AppPresenter {
             return;
         }
 
-        QueueNetwork queueNetwork = new QueueBuilder(serialization).buildQueue();
-
-        if (queueNetwork != null) {
-            appCallbacks.showResults(new Results(queueNetwork));
-        } else {
-            appCallbacks.showError("Error creating queueNetwork");
+        try {
+            QueueNetwork queueNetwork = new QueueBuilder(serialization).buildQueue();
+            if (queueNetwork != null) {
+                appCallbacks.showResults(new Results(queueNetwork));
+            } else {
+                appCallbacks.showError("Error creating queueNetwork");
+            }
+        } catch (IncorrectUtilizationException ex){
+            appCallbacks.showError(ex.getMessage());
         }
+
+
+
     }
 
     public void stop() {

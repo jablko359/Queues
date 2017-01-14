@@ -61,7 +61,7 @@ public class App extends Application implements AppCallbacks {
         createNewQueueNetworkButton
                 .setOnAction(c -> new QueueBuilderDialog(queueNetwork -> {
 
-                    double K = queueNetwork.getPerformanceMeasure();
+                    double K = queueNetwork.getK();
 
                     System.out.println("Performance measure: " + K);
                 }).show());

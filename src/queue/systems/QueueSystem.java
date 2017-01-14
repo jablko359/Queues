@@ -1,5 +1,6 @@
 package queue.systems;
 
+import queue.IncorrectUtilizationException;
 import queue.graph.NodeData;
 import queue.Data;
 
@@ -18,25 +19,27 @@ public abstract class QueueSystem {
     protected int position;
 
     //lambda
-    protected Data arrivalRatio = new Data();
+    protected Data clientLambda = new Data();
     //mi
-    protected double serviceRatio;
+    protected double mi;
 
     //Rho
-    protected double utilization;
+    protected double rho;
 
+    //Input from outside world
+    protected Data outsideInput;
 
     protected Map<QueueSystem, Data> outputs = new HashMap<>();
     protected Map<QueueSystem, Data> inputs = new HashMap<>();
 
-    protected Data clientUtilization = new Data();
+    protected Data clientRho = new Data();
 
     public void addOutput(QueueSystem system, Data data) {
-        outputs.put(system,data);
+        outputs.put(system, data);
     }
 
     public void addInput(QueueSystem system, Data data) {
-        inputs.put(system,data);
+        inputs.put(system, data);
     }
 
     public String getId() {
@@ -51,63 +54,64 @@ public abstract class QueueSystem {
         return position;
     }
 
-    public double getUtilization() {
-        return utilization;
+    public double getRho() {
+        return rho;
     }
 
-    public Data getArrivalRatio() {
-        return arrivalRatio;
+    public Data getClientLambda() {
+        return clientLambda;
     }
 
     public Map<QueueSystem, Data> getOutputs() {
         return outputs;
     }
 
-    public void setArrivalRatio(Data arrivalRatio) {
-        this.arrivalRatio = arrivalRatio;
+    public void setClientLambda(Data clientLambda) {
+        this.clientLambda = clientLambda;
     }
 
     public QueueSystem(String id, NodeData data, int position) {
         this.id = id;
         this.position = position;
-        serviceRatio = data.getServiceRatio();
+        this.outsideInput = data.getOutsideInput();
+        mi = data.getMi();
     }
 
-    public boolean validate(){
+    public boolean validate() {
 
-        if(outputs.size() == 0){
+        if (outputs.size() == 0) {
             return true;
         }
-        HashMap<String,Double> checkSum = new HashMap();
-        for (Data input : outputs.values()){
-            for(String type : input.getTypes()){
+        HashMap<String, Double> checkSum = new HashMap();
+        for (Data input : outputs.values()) {
+            for (String type : input.getTypes()) {
 
                 double value = input.getValue(type);
-                if(checkSum.containsKey(type)){
-                    checkSum.put(type,checkSum.get(type) + value);
+                if (checkSum.containsKey(type)) {
+                    checkSum.put(type, checkSum.get(type) + value);
                 } else {
-                    checkSum.put(type,value);
+                    checkSum.put(type, value);
                 }
 
-                if(checkSum.get(type) > 1){
+                if (checkSum.get(type) > 1) {
                     return false;
                 }
             }
         }
 
-        for(String type : checkSum.keySet()) {
-            if(checkSum.get(type) == 0 || checkSum.get(type) == 1 ) {
+        for (String type : checkSum.keySet()) {
+            if (checkSum.get(type) == 0 || checkSum.get(type) == 1) {
                 return true;
             }
         }
         return false;
     }
 
-    public Set<String> getActiveClients(){
+    public Set<String> getActiveClients() {
         HashSet<String> activeType = new HashSet<>();
-        for (Data data : inputs.values()){
-            for (String type : data.getTypes()){
-                if(data.getValue(type) != 0){
+        for (Data data : inputs.values()) {
+            for (String type : data.getTypes()) {
+                if (data.getValue(type) != 0) {
                     activeType.add(type);
                 }
             }
@@ -116,24 +120,50 @@ public abstract class QueueSystem {
     }
 
 
-    public void calculateUtilization() {
-        utilization = arrivalRatio.sum() / serviceRatio;
-        for (Map.Entry<String,Double> arrival : arrivalRatio.getMapValues().entrySet()){
-            double util = arrival.getValue() / serviceRatio;
-            clientUtilization.setValue(arrival.getKey(),util);
+    public void calculateUtilization() throws IncorrectUtilizationException {
+        rho = clientLambda.sum() / mi;
+        for (Map.Entry<String, Double> arrival : clientLambda.getMapValues().entrySet()) {
+            double util = arrival.getValue() / mi;
+            clientRho.setValue(arrival.getKey(), util);
         }
-        if(utilization > 1){
-            throw new RuntimeException("Utilization rate is more than 1 (" + utilization +") for system: " + id);
+        if (rho >= 1) {
+            throw new IncorrectUtilizationException(id, rho);
         }
     }
 
-    public double getPerformanceMeasure(String clientId){
-        double clientUtil = clientUtilization.getValue(clientId);
-        return clientUtil / (1 - utilization);
+    public double getPerformanceMeasure(String clientId) {
+        double clientUtil = clientRho.getValue(clientId);
+        return clientUtil / (1 - rho);
+    }
+
+    public Data getOutsideInput() {
+        return outsideInput;
     }
 
     @Override
-    public int hashCode(){
+    public int hashCode() {
         return id.hashCode();
     }
+
+    public double calculateQ(String clientType) {
+        double W = calculateW(clientType);
+        double lambda = this.clientLambda.getValue(clientType);
+        return lambda * W;
+    }
+
+    public double calculateT(String clientType) {
+        //7.43 EQ
+        double K = this.getPerformanceMeasure(clientType);
+        if (this.clientLambda.getValue(clientType) == 0) {
+            return 0;
+        }
+        return K / this.clientLambda.getValue(clientType);
+    }
+
+    public double calculateW(String clientType) {
+        //7.44
+        double T = calculateT(clientType);
+        return T - 1 / mi;
+    }
+
 }

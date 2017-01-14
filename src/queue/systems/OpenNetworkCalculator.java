@@ -30,7 +30,7 @@ public class OpenNetworkCalculator implements CalculatorFactory {
 
                         @Override
                         public double getProbability(int state) {
-                            double result = (1 - system.getUtilization()) * (Math.pow(system.getUtilization(), state));
+                            double result = (1 - system.getRho()) * (Math.pow(system.getRho(), state));
                             return result;
                         }
                     };
@@ -45,7 +45,7 @@ public class OpenNetworkCalculator implements CalculatorFactory {
                     return new StateProbabilityCalculator(system) {
                         @Override
                         public double getProbability(int state) {
-                            return (Math.pow(Math.E, system.getUtilization())) * ((Math.pow(system.getUtilization(), state)) / (Utils.factorial(state)));
+                            return (Math.pow(Math.E, system.getRho())) * ((Math.pow(system.getRho(), state)) / (Utils.factorial(state)));
                         }
                     };
                 }
@@ -63,7 +63,7 @@ public class OpenNetworkCalculator implements CalculatorFactory {
 
                             FifoSystem fifoSystem = (FifoSystem) system;
                             //m
-                            int positionCount = fifoSystem.getPositionCount();
+                            int positionCount = fifoSystem.getM();
 
                             if (positionCount == 0) {
                                 return (Provider.standardOpenProvider()).createCalculator(system).getProbability(state);
@@ -73,10 +73,10 @@ public class OpenNetworkCalculator implements CalculatorFactory {
                             double result = 0;
 
                             ////6.27 equation from Wiley Interscience Queueing Networks
-                            if (state <= fifoSystem.getPositionCount()) {
-                                result = zeroStateProbability * (Math.pow(fifoSystem.getPositionCount() * fifoSystem.getUtilization(), state) / Utils.factorial(state));
+                            if (state <= fifoSystem.getM()) {
+                                result = zeroStateProbability * (Math.pow(fifoSystem.getM() * fifoSystem.getRho(), state) / Utils.factorial(state));
                             } else {
-                                result = zeroStateProbability * ((Math.pow(fifoSystem.getUtilization(), state) * Math.pow(fifoSystem.getPositionCount(), fifoSystem.getPositionCount())) / Utils.factorial(fifoSystem.getPositionCount()));
+                                result = zeroStateProbability * ((Math.pow(fifoSystem.getRho(), state) * Math.pow(fifoSystem.getM(), fifoSystem.getM())) / Utils.factorial(fifoSystem.getM()));
                             }
 
                             return result;

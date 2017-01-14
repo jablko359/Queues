@@ -1,8 +1,6 @@
 package queue;
 
-import queue.Data;
 import org.apache.commons.math3.linear.*;
-import queue.OpenNetwork;
 import queue.systems.QueueSystem;
 
 import java.util.Collection;
@@ -32,7 +30,6 @@ public class OpenNetworkEquation {
         for (String customerType : activeCustomers) {
             int dim = network.getSystems().size();
             RealVector constant = new ArrayRealVector(dim);
-            constant.setEntry(network.getStartSystem().getPosition(), network.getClientArrivalCoeff().getValue(customerType));
             RealMatrix matrix = getIdentityMatrix(dim);
             for (QueueSystem system : systems) {
                 int row = system.getPosition();
@@ -42,6 +39,7 @@ public class OpenNetworkEquation {
                     int col = entry.getKey().getPosition();
                     matrix.setEntry(row, col, value);
                 }
+                constant.setEntry(system.getPosition(),system.getOutsideInput().getValue(customerType) * network.getClientLambdas().getValue(customerType));
 
             }
             constants.put(customerType, constant);

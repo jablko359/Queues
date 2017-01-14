@@ -9,7 +9,6 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.File;
 import java.util.HashMap;
@@ -27,10 +26,9 @@ public class QueueSerialization {
     private HashMap<String, NodeData> systems = new HashMap<>();
     private Edges edges = new Edges();
     private boolean isClosed = false;
-    private String inputSystemId;
 
-    @XmlElement(name ="arrivalCoefficient")
-    private Data clientArrivalCoeff = null;
+
+    private Data clientLambdas = null;
 
     public HashMap<String, NodeData> getSystems() {
         return systems;
@@ -44,13 +42,11 @@ public class QueueSerialization {
         return isClosed;
     }
 
-    public Data getClientArrivalCoeff() {
-        return clientArrivalCoeff;
+    public Data getClientLambdas() {
+        return clientLambdas;
     }
 
-    public String getInputSystemId() {
-        return inputSystemId;
-    }
+
 
     public void setSystems(HashMap<String, NodeData> systems) {
         this.systems = systems;
@@ -64,12 +60,9 @@ public class QueueSerialization {
         isClosed = closed;
     }
 
-    public void setInputSystemId(String inputSystemId) {
-        this.inputSystemId = inputSystemId;
-    }
 
-    public void setClientArrivalCoeff(Data clientArrivalCoeff) {
-        this.clientArrivalCoeff = clientArrivalCoeff;
+    public void setClientLambdas(Data clientLambdas) {
+        this.clientLambdas = clientLambdas;
     }
 
     public QueueSerialization(){
@@ -91,18 +84,23 @@ public class QueueSerialization {
         Marshaller marshaller = context.createMarshaller();
 
         NodeData node1 = new NodeData();
-        node1.setServiceRatio(0.5);
-        node1.setPositions(2);
+        node1.setMi(0.5);
+        node1.setM(2);
+
+        Data outsideInput = new Data();
+        outsideInput.setValue("Student", 1);
+        node1.setOutsideInput(outsideInput);
+
 
 
         NodeData node2 = new NodeData();
-        node2.setServiceRatio(3);
-        node2.setPositions(1);
+        node2.setMi(3);
+        node2.setM(1);
 
         NodeData node3 = new NodeData();
         node3.setSystemType(SystemType.LIFO);
-        node3.setServiceRatio(4);
-        node3.setPositions(12);
+        node3.setMi(4);
+        node3.setM(12);
 
         EdgeData edge1 = new EdgeData();
         Data prob1 = new Data();
@@ -125,11 +123,10 @@ public class QueueSerialization {
         serialization.systems.put("1", node1);
         serialization.systems.put("2", node2);
         serialization.systems.put("3", node3);
-        serialization.inputSystemId = "1";
 
         Data arrivalCoef = new Data();
         arrivalCoef.setValue("Student",5);
-        serialization.clientArrivalCoeff = arrivalCoef;
+        serialization.clientLambdas = arrivalCoef;
 
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
         marshaller.marshal(serialization ,new File("Test.xml"));

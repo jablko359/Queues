@@ -1,7 +1,6 @@
 package queue;
 
 import org.apache.commons.math3.linear.RealVector;
-import queue.systems.CalculatorFactory;
 import queue.systems.OpenNetworkCalculator;
 import queue.systems.QueueSystem;
 import queue.systems.StateProbabilityCalculator;
@@ -13,34 +12,30 @@ import java.util.*;
  */
 public class OpenNetwork extends QueueNetwork {
 
-    private String inputSystemId;
-    private Data clientArrivalCoeff;
-    private QueueSystem startSystem;
+
+    private Data clientLambdas;
 
 
-    public OpenNetwork(Map<String, QueueSystem> systems, Data clientArrivalCoeff, String inputSystemId) {
+    public OpenNetwork(Map<String, QueueSystem> systems, Data clientArrivalCoeff) {
         super(systems, new OpenNetworkCalculator());
-        this.clientArrivalCoeff = clientArrivalCoeff;
-        this.inputSystemId = inputSystemId;
-        startSystem = systems.get(inputSystemId);
-        if (startSystem == null) {
-            throw new RuntimeException("System " + inputSystemId + " not found");
-        }
+        this.clientLambdas = clientArrivalCoeff;
+
     }
 
     @Override
-    public void calculateParameters() {
-        OpenNetworkEquation equation = new OpenNetworkEquation(this);
-        Map<String,RealVector> arrivalCoeffs = equation.compute();
-        for (QueueSystem system : systems.values()){
-            int pos = system.getPosition();
-            Data data = new Data();
-            for (Map.Entry<String,RealVector> vectorEntry : arrivalCoeffs.entrySet()){
-                data.setValue(vectorEntry.getKey(),vectorEntry.getValue().getEntry(pos));
+    public void calculateParameters(boolean calculateLambda) throws IncorrectUtilizationException {
+        if (calculateLambda) {
+            OpenNetworkEquation equation = new OpenNetworkEquation(this);
+            Map<String,RealVector> arrivalCoeffs = equation.compute();
+            for (QueueSystem system : systems.values()){
+                int pos = system.getPosition();
+                Data data = new Data();
+                for (Map.Entry<String,RealVector> vectorEntry : arrivalCoeffs.entrySet()){
+                    data.setValue(vectorEntry.getKey(),vectorEntry.getValue().getEntry(pos));
+                }
+                system.setClientLambda(data);
             }
-            system.setArrivalRatio(data);
         }
-
         for(QueueSystem system : systems.values()){
             system.calculateUtilization();
         }
@@ -65,11 +60,7 @@ public class OpenNetwork extends QueueNetwork {
         return result;
     }
 
-    public QueueSystem getStartSystem() {
-        return startSystem;
-    }
-
-    public Data getClientArrivalCoeff() {
-        return clientArrivalCoeff;
+    public Data getClientLambdas() {
+        return clientLambdas;
     }
 }
