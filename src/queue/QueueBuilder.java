@@ -1,5 +1,7 @@
 package queue;
 
+import queue.exceptions.IncorrectUtilizationException;
+import queue.exceptions.InvalidNetworkException;
 import queue.graph.EdgeData;
 import queue.graph.NodeData;
 import queue.graph.QueueSerialization;
@@ -20,8 +22,7 @@ public class QueueBuilder {
         queueSerialization = deserializedData;
     }
 
-
-    public QueueNetwork buildQueue() throws IncorrectUtilizationException {
+    public QueueNetwork buildQueue() throws IncorrectUtilizationException, InvalidNetworkException {
         int counter = 0;
         HashMap<String, NodeData> nodes = queueSerialization.getSystems();
         HashMap<String, QueueSystem> systems = new HashMap<>();
@@ -41,19 +42,14 @@ public class QueueBuilder {
             target.addInput(source, data.getProbabilities());
         }
         QueueNetwork network;
-        if (queueSerialization.isClosed()) {
-            return null;
+        if (queueSerialization.isNetworkClosed()) {
+        	System.out.println("NETWORK CLOSED");
+            network = new ClosedNetwork(systems, queueSerialization.getNetworkCapacity());
         } else {
+        	System.out.println("NETWORK OPEN");
             network = new OpenNetwork(systems, queueSerialization.getClientLambdas());
         }
-//        if (!network.validate()) {
-//            throw new RuntimeException("queue system not valid");
-//        }
-
         network.calculateParameters(true);
-
         return network;
     }
-
-
 }

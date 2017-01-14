@@ -124,8 +124,6 @@
             <sourceId>4</sourceId>
         </edge>
     </edges>
-    <isClosed>false</isClosed>
-    <inputSystemId>1</inputSystemId>
     <clientLambdas>
         <values>
             <entry>

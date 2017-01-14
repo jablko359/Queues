@@ -1,7 +1,7 @@
 package queue.bees;
 
-import queue.IncorrectUtilizationException;
 import queue.QueueNetwork;
+import queue.exceptions.IncorrectUtilizationException;
 import queue.systems.FifoSystem;
 import queue.systems.QueueSystem;
 

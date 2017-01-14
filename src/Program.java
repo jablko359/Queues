@@ -1,12 +1,13 @@
 /**
  * Created by Igor on 03.12.2016.
  */
-import queue.IncorrectUtilizationException;
 import queue.QueueBuilder;
 import queue.QueueNetwork;
 import queue.bees.BeeAlgorithm;
 import queue.bees.BeeCoordinates;
 import queue.bees.DziekanatNodeType;
+import queue.exceptions.IncorrectUtilizationException;
+import queue.exceptions.InvalidNetworkException;
 import queue.graph.QueueSerialization;
 import view.SystemCreatorDialog;
 
@@ -24,7 +25,7 @@ public class Program {
             QueueNetwork network = builder.buildQueue();
 
             startBees(network);
-        } catch (IncorrectUtilizationException ex){
+        } catch (IncorrectUtilizationException | InvalidNetworkException ex){
             ex.printStackTrace();
         }
     }

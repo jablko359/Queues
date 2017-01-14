@@ -1,6 +1,8 @@
 package queue;
 
 import org.apache.commons.math3.linear.RealVector;
+
+import queue.exceptions.IncorrectUtilizationException;
 import queue.systems.OpenNetworkCalculator;
 import queue.systems.QueueSystem;
 import queue.systems.StateProbabilityCalculator;

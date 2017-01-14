@@ -1,5 +1,6 @@
 package queue;
 
+import queue.exceptions.IncorrectUtilizationException;
 import queue.systems.CalculatorFactory;
 import queue.systems.QueueSystem;
 import queue.systems.StateProbabilityCalculator;
