@@ -128,6 +128,10 @@ public class App extends Application implements AppCallbacks {
 
     @Override
     public void showError(String errorMsg) {
+        showErr(errorMsg);
+    }
+
+    public static void showErr(String errorMsg) {
         System.out.println("Error occurred");
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("WTF");
