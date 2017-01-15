@@ -64,7 +64,11 @@ public class QueueSerialization {
     public void setClientLambdas(Data clientLambdas) {
         this.clientLambdas = clientLambdas;
     }
-    
+
+    public Map<String, Integer> getNetworkCapacity() {
+        return networkCapacity;
+    }
+
     public boolean isNetworkClosed() throws InvalidNetworkException {
     	for(Entry<String, NodeData> systemEntry : systems.entrySet()) {
     		Map<String, Double> outputProbability = new HashMap<>();
@@ -173,7 +177,4 @@ public class QueueSerialization {
         marshaller.marshal(serialization ,new File("Test.xml"));
     }
 
-    public Map<String, Integer> getNetworkCapacity() {
-        return null;
-    }
 }
