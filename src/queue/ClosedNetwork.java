@@ -130,7 +130,6 @@ public class ClosedNetwork extends QueueNetwork {
 		// Qir
 		queueLength = Utils.ebeMultiply(lambdas, waitTime);
 		System.out.println("Q: " + queueLength);
-		
 	}
 	
 }

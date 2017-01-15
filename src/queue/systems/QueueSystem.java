@@ -45,6 +45,66 @@ public abstract class QueueSystem {
     //Rho
     protected double rho;
 
+    public static Comparator<QueueSystem> getOrderComparator() {
+        return ORDER_COMPARATOR;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
+    public SystemType getType() {
+        return type;
+    }
+
+    public void setType(SystemType type) {
+        this.type = type;
+    }
+
+    public double getMi() {
+        return mi;
+    }
+
+    public void setMi(double mi) {
+        this.mi = mi;
+    }
+
+    public int getM() {
+        return m;
+    }
+
+    public void setM(int m) {
+        this.m = m;
+    }
+
+    public void setRho(double rho) {
+        this.rho = rho;
+    }
+
+    public void setOutsideInput(Data outsideInput) {
+        this.outsideInput = outsideInput;
+    }
+
+    public void setOutputs(Map<QueueSystem, Data> outputs) {
+        this.outputs = outputs;
+    }
+
+    public void setInputs(Map<QueueSystem, Data> inputs) {
+        this.inputs = inputs;
+    }
+
+    public Data getClientRho() {
+        return clientRho;
+    }
+
+    public void setClientRho(Data clientRho) {
+        this.clientRho = clientRho;
+    }
+
     //Input from outside world
     protected Data outsideInput;
 

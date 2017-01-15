@@ -2,6 +2,8 @@ package view.bees;
 
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.VBox;
 import queue.QueueNetwork;
 
@@ -40,7 +42,29 @@ public class QueueParamsLayout {
     public static Node newParamsLayout(QueueNetwork network) {
         VBox node = new VBox();
 
-        for (String s : produceInfo(network)) {
+
+        List<String> infos = produceInfo(network);
+
+
+        Button clipBoard = new Button("Copy to clipboard");
+        clipBoard.setOnAction(c -> {
+            final Clipboard clipboard = Clipboard.getSystemClipboard();
+            final ClipboardContent content = new ClipboardContent();
+            StringBuilder sb = new StringBuilder();
+            for (String s : infos) {
+                sb.append(s).append("\n");
+            }
+            content.putString(sb.toString());
+            clipboard.setContent(content);
+
+            System.out.println("copied to clipboard");
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("WTF");
+            alert.setContentText("COPIED TO CLIPBOARD!");
+            alert.showAndWait();
+        });
+    node.getChildren().add(clipBoard);
+        for (String s : infos) {
             node.getChildren().add(new Label(s));
         }
 
