@@ -1,6 +1,7 @@
 package queue.graph;
 
 import queue.Data;
+import queue.exceptions.InvalidNetworkException;
 import queue.systems.SystemType;
 
 import javax.xml.bind.JAXBContext;
@@ -10,9 +11,15 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import lombok.Getter;
+import lombok.Setter;
+
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * Created by Igor on 03.12.2016.
@@ -21,14 +28,18 @@ import java.util.List;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class QueueSerialization {
 
-
-
+	static Double PROBABILITY_APPROX_E = 0.02;
+    public static boolean almostEqual(Double a, Double b, Double epsilon) {
+    	return Math.abs(a - b) < epsilon;
+    }
+	
     private HashMap<String, NodeData> systems = new HashMap<>();
     private Edges edges = new Edges();
-    private boolean isClosed = false;
-
-
     private Data clientLambdas = null;
+    
+    @Getter
+    @Setter
+    private HashMap<String, Integer> networkCapacity = new HashMap<>();
 
     public HashMap<String, NodeData> getSystems() {
         return systems;
@@ -38,15 +49,9 @@ public class QueueSerialization {
         return edges.getEdges();
     }
 
-    public boolean isClosed() {
-        return isClosed;
-    }
-
     public Data getClientLambdas() {
         return clientLambdas;
     }
-
-
 
     public void setSystems(HashMap<String, NodeData> systems) {
         this.systems = systems;
@@ -56,15 +61,51 @@ public class QueueSerialization {
         this.edges = edges;
     }
 
-    public void setClosed(boolean closed) {
-        isClosed = closed;
-    }
-
-
     public void setClientLambdas(Data clientLambdas) {
         this.clientLambdas = clientLambdas;
     }
-
+    
+    public boolean isNetworkClosed() throws InvalidNetworkException {
+    	for(Entry<String, NodeData> systemEntry : systems.entrySet()) {
+    		Map<String, Double> outputProbability = new HashMap<>();
+    		
+    		String systemId = systemEntry.getKey();
+    		NodeData system = systemEntry.getValue();
+    		// checking if input exists for clientID 
+    		if (system.getOutsideInput() != null) {
+    			if (system.getOutsideInput().sum() != 0) {
+    				return false; // non zero input for system
+    			}
+    		}
+    		
+    		// checking output probabilities for clients
+    		for(EdgeData edge : edges.getEdges()) {
+    			if (systemId.equals(edge.getSourceId())) {
+    				for(Entry<String, Double> clientProbabilitiesEntry : edge.getProbabilities().getMapValues().entrySet()) {
+    					String clientId = clientProbabilitiesEntry.getKey();
+    					Double clientProbability = clientProbabilitiesEntry.getValue();
+    					
+    					// update output for client
+    					System.out.println(clientId + " @ " + edge.getSourceId() + " -> " + edge.getTargetId() + " with: " + clientProbabilitiesEntry.getValue());
+    					outputProbability.merge(clientId, clientProbability, (o, n) -> o + n);
+    				}
+    			}
+    		}
+    		for(Entry<String, Double> classEntry : outputProbability.entrySet()) {
+    			if (classEntry.getValue() > (1 + PROBABILITY_APPROX_E)) {
+    				// probability > 1, such a disaster
+    				throw new InvalidNetworkException(systemId, classEntry.getKey(), classEntry.getValue());
+    			}
+    			// there must be an output
+    			if (!almostEqual(1d, classEntry.getValue(), PROBABILITY_APPROX_E)) {
+    				//System.out.println("CLOSED NETWORK FOR: " + systemId + " @ " + classEntry.getKey() + " WITH " + classEntry.getValue());
+    				return false;
+    			}
+    		}	
+    	}
+    	return true;
+    }
+   
     public QueueSerialization(){
     }
 

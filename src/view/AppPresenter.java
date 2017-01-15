@@ -1,10 +1,10 @@
 package view;
 
 
-
-import queue.IncorrectUtilizationException;
 import queue.QueueBuilder;
 import queue.QueueNetwork;
+import queue.exceptions.InvalidNetworkException;
+import queue.exceptions.IncorrectUtilizationException;
 import queue.graph.QueueSerialization;
 
 import javax.xml.bind.JAXBException;
@@ -73,7 +73,7 @@ public class AppPresenter {
             } else {
                 appCallbacks.showError("Error creating queueNetwork");
             }
-        } catch (IncorrectUtilizationException ex){
+        } catch (IncorrectUtilizationException | InvalidNetworkException ex){
             appCallbacks.showError(ex.getMessage());
         }
 

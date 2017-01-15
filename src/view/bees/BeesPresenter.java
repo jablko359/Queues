@@ -1,6 +1,7 @@
 package view.bees;
 
-import queue.IncorrectUtilizationException;
+import queue.exceptions.IncorrectUtilizationException;
+import queue.exceptions.InvalidNetworkException;
 import queue.QueueBuilder;
 import queue.QueueNetwork;
 import queue.graph.QueueSerialization;
@@ -42,7 +43,7 @@ public class BeesPresenter {
             QueueNetwork network = builder.buildQueue();
             return network;
 
-        } catch (IncorrectUtilizationException ex) {
+        } catch (IncorrectUtilizationException | InvalidNetworkException ex) {
             ex.printStackTrace();
             errorMessage += " build queueNetwork: " + ex.getMessage() + "\n";
         } catch (JAXBException e) {

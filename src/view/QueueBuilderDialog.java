@@ -6,7 +6,8 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import queue.Data;
-import queue.IncorrectUtilizationException;
+import queue.exceptions.IncorrectUtilizationException;
+import queue.exceptions.InvalidNetworkException;
 import queue.QueueBuilder;
 import queue.QueueNetwork;
 import queue.graph.EdgeData;
@@ -136,7 +137,7 @@ public class QueueBuilderDialog {
         try {
             QueueNetwork network = builder.buildQueue();
             return network;
-        } catch (IncorrectUtilizationException ex){
+        } catch (IncorrectUtilizationException | InvalidNetworkException ex){
             ex.printStackTrace();
             return null;
         }

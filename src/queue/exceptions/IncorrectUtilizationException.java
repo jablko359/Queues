@@ -1,10 +1,15 @@
-package queue;
+package queue.exceptions;
 
 /**
  * Created by Igor on 07.01.2017.
  */
 public class IncorrectUtilizationException extends Exception {
-    private String systemId;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	private String systemId;
     private double utilizationValue;
 
     public IncorrectUtilizationException(String systemId, double utilizationValue) {

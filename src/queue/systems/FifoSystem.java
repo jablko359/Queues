@@ -1,8 +1,8 @@
 package queue.systems;
 
-import queue.IncorrectUtilizationException;
 import queue.graph.NodeData;
 import queue.Utils;
+import queue.exceptions.IncorrectUtilizationException;
 
 import java.util.Map;
 
