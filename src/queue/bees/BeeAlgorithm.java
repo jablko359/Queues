@@ -20,6 +20,10 @@ public class BeeAlgorithm {
     //    ilosc iteracji algorytmu
     public static int ITERATIONS_NUMBER = 200;
 
+    public static double AVERAGE_TIME_COEFFICIENT = 100;
+
+    public static double NUMBER_OF_CHANNELS_COEFFICIENT = 50;
+
     //siec
     private QueueNetwork network;
 
@@ -192,7 +196,7 @@ public class BeeAlgorithm {
 //		averageTime = averageTime / (network.getActiveCustomerTypes().size() * 5);
 
         //TODO Funkcja celu
-        return averageTime * 100 + numberOfChannels * 1;
+        return averageTime * AVERAGE_TIME_COEFFICIENT + numberOfChannels * NUMBER_OF_CHANNELS_COEFFICIENT;
     }
 
     private void updateM(Bee bee) {

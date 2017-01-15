@@ -14,6 +14,9 @@ import queue.bees.BeeAlgorithm;
 
 import java.util.List;
 
+import static queue.bees.BeeAlgorithm.AVERAGE_TIME_COEFFICIENT;
+import static queue.bees.BeeAlgorithm.NUMBER_OF_CHANNELS_COEFFICIENT;
+
 /**
  * Queues
  *
@@ -52,12 +55,13 @@ public class BeesResultDialog {
         final NumberAxis xAxis = new NumberAxis("Nr. iteracji", 0, bees.size() + 1, 10);
         final NumberAxis yAxis = new NumberAxis("Wartość funkcji celu", minY - 1, maxY + 1, 1);
         final AreaChart<Number, Number> areaChart = new AreaChart<>(xAxis, yAxis);
-        areaChart.setMinHeight(600);
+        areaChart.setMinHeight(500);
         areaChart.setMinWidth(800);
         areaChart.setTitle("Algorytm pszczeli");
 
         XYChart.Series beeSeries = new XYChart.Series();
-        beeSeries.setName("Wartość funkcji celu");
+        beeSeries.setName("F(x) =  " + AVERAGE_TIME_COEFFICIENT + "* averageTime +  "
+                + NUMBER_OF_CHANNELS_COEFFICIENT + " * numberOfChannels");
 
         int iteration = 1;
         for (Bee bee : bees) {
