@@ -26,6 +26,10 @@ import java.io.File;
  */
 public class BeesApp extends Application implements BeesCallbacks {
 
+    public static void main(String[] args) {
+        launch(args);
+    }
+
     Button runBeesAlgorithm;
     Button showParamsLayout;
     Button fileChooseButton;
@@ -83,15 +87,15 @@ public class BeesApp extends Application implements BeesCallbacks {
 
         editBeeParams.getChildren().addAll(labels, textFields);
 
-        editBeeParams.setVisible(false);
+//        editBeeParams.setVisible(false);
 
 
         box.getChildren().add(editBeeParams);
 
         //additional config
-//        HBox iterations = new HBox();
-//        Label iterationsLAbel = new Label("Number of iterations");
-//        TextField iterationsField = new TextField(String.valueOf(BeeAlgorithm.ITERATIONS_NUMBER));
+        HBox iterations = new HBox();
+        Label iterationsLAbel = new Label("Number of iterations");
+        TextField iterationsField = new TextField(String.valueOf(BeeAlgorithm.ITERATIONS_NUMBER));
 //        iterationsField.textProperty().addListener((observable, oldValue, newValue) -> {
 //            if (newValue.length() > 0) try {
 //                BeeAlgorithm.ITERATIONS_NUMBER = Integer.parseInt(newValue);
@@ -99,12 +103,12 @@ public class BeesApp extends Application implements BeesCallbacks {
 //            } catch (Exception x) {
 //            }
 //        });
-//        iterations.getChildren().addAll(iterationsLAbel, iterationsField);
-//        box.getChildren().add(iterations);
-//
-//        HBox channels = new HBox();
-//        Label channelMins = new Label("Min number of channels");
-//        TextField minChannelField = new TextField(String.valueOf(BeeAlgorithm.MIN_CHANNEL));
+        iterations.getChildren().addAll(iterationsLAbel, iterationsField);
+        box.getChildren().add(iterations);
+
+        HBox channels = new HBox();
+        Label channelMins = new Label("Min number of channels");
+        TextField minChannelField = new TextField(String.valueOf(BeeAlgorithm.MIN_CHANNEL));
 //        minChannelField.textProperty().addListener((oo, o, newValue) -> {
 //            if (newValue.length() > 0) try {
 //                BeeAlgorithm.MIN_CHANNEL = Integer.parseInt(newValue);
@@ -112,8 +116,8 @@ public class BeesApp extends Application implements BeesCallbacks {
 //            } catch (Exception x) {
 //            }
 //        });
-//        Label channelMax = new Label("Max number of channels");
-//        TextField maxChannelField = new TextField(String.valueOf(BeeAlgorithm.MAX_CHANNEL));
+        Label channelMax = new Label("Max number of channels");
+        TextField maxChannelField = new TextField(String.valueOf(BeeAlgorithm.MAX_CHANNEL));
 //        minChannelField.textProperty().addListener((xxx, xx, newValue) -> {
 //            if (newValue.length() > 0) try {
 //                BeeAlgorithm.MAX_CHANNEL = Integer.parseInt(newValue);
@@ -122,12 +126,12 @@ public class BeesApp extends Application implements BeesCallbacks {
 //
 //            }
 //        });
-//        channels.getChildren().addAll(channelMins, minChannelField, channelMax, maxChannelField);
-//        box.getChildren().add(iterations);
-//
-//        Label TTLable = new Label("TTL");
-//        TextField ttlField = new TextField(String.valueOf(BeeAlgorithm.TTL));
-//        HBox ttlBo = new HBox();
+        channels.getChildren().addAll(channelMins, minChannelField, channelMax, maxChannelField);
+        box.getChildren().add(channels);
+
+        Label TTLable = new Label("TTL");
+        TextField ttlField = new TextField(String.valueOf(BeeAlgorithm.TTL));
+        HBox ttlBo = new HBox();
 //        ttlField.textProperty().addListener((o, oo, nev) -> {
 //            if (nev.length() > 0) try {
 //                BeeAlgorithm.TTL = Integer.parseInt(nev);
@@ -136,8 +140,8 @@ public class BeesApp extends Application implements BeesCallbacks {
 //
 //            }
 //        });
-//        ttlBo.getChildren().addAll(TTLable, ttlField);
-//        box.getChildren().add(ttlBo);
+        ttlBo.getChildren().addAll(TTLable, ttlField);
+        box.getChildren().add(ttlBo);
 
         //primary parameters
 
@@ -149,7 +153,15 @@ public class BeesApp extends Application implements BeesCallbacks {
         runBeesAlgorithm = new Button("Run");
         runBeesAlgorithm.setOnAction(c -> {
             BeeAlgorithm beeAlgorithm = null;
+
+
             try {
+
+                BeeAlgorithm.ITERATIONS_NUMBER = Integer.valueOf(iterationsField.getText());
+                BeeAlgorithm.MAX_CHANNEL = Integer.valueOf(maxChannelField.getText());
+                BeeAlgorithm.MIN_CHANNEL = Integer.valueOf(minChannelField.getText());
+                BeeAlgorithm.TTL = Integer.valueOf(ttlField.getText());
+
                 beeAlgorithm = new BeeAlgorithm(
                         beesPresenter.getQueue(),
                         Integer.valueOf(e_bestSolutionsNumber.getText()),
@@ -159,7 +171,9 @@ public class BeesApp extends Application implements BeesCallbacks {
                         Integer.valueOf(e_exclusiveSolutionsNeighberhoodNumber.getText())
                 );
             } catch (NumberFormatException x) {
-                showError("Invalid parameters!");
+                showError("Invalid parameters! Check if parameters " +
+                        "(iterations number, min,max channel, TTL)" +
+                        " are valid");
             }
             if (beeAlgorithm != null) {
                 //initiate beeAlgorithm
@@ -174,7 +188,7 @@ public class BeesApp extends Application implements BeesCallbacks {
 
         box.getChildren().add(showParamsLayout);
         box.getChildren().add(runBeesAlgorithm);
-        runBeesAlgorithm.setVisible(false);
+//        runBeesAlgorithm.setVisible(false);
         root.setCenter(box);
 
         primaryStage.setTitle("Bees");
@@ -212,8 +226,8 @@ public class BeesApp extends Application implements BeesCallbacks {
     @Override
     public void showEditBeeParameters() {
         System.out.println("showEditBeeParameters");
-        editBeeParams.setVisible(true);
-        runBeesAlgorithm.setVisible(true);
+//        editBeeParams.setVisible(true);
+//        runBeesAlgorithm.setVisible(true);
 
     }
 }
