@@ -1,15 +1,15 @@
 package queue;
 
-import queue.exceptions.IncorrectUtilizationException;
+import java.util.HashMap;
+import java.util.Map;
+
 import queue.exceptions.InvalidNetworkException;
+import queue.exceptions.QueueException;
 import queue.graph.EdgeData;
 import queue.graph.NodeData;
 import queue.graph.QueueSerialization;
 import queue.systems.QueueSystem;
 import queue.systems.SystemType;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by Igor on 03.12.2016.
@@ -22,7 +22,7 @@ public class QueueBuilder {
         queueSerialization = deserializedData;
     }
 
-    public QueueNetwork buildQueue() throws IncorrectUtilizationException, InvalidNetworkException {
+    public QueueNetwork buildQueue() throws QueueException, InvalidNetworkException {
         int counter = 0;
         HashMap<String, NodeData> nodes = queueSerialization.getSystems();
         HashMap<String, QueueSystem> systems = new HashMap<>();

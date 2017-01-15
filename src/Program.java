@@ -1,20 +1,16 @@
 /**
  * Created by Igor on 03.12.2016.
  */
+import java.io.File;
+
+import javax.xml.bind.JAXBException;
+
 import queue.QueueBuilder;
 import queue.QueueNetwork;
 import queue.bees.BeeAlgorithm;
-import queue.bees.BeeCoordinates;
-import queue.bees.DziekanatNodeType;
-import queue.exceptions.IncorrectUtilizationException;
 import queue.exceptions.InvalidNetworkException;
+import queue.exceptions.QueueException;
 import queue.graph.QueueSerialization;
-import view.SystemCreatorDialog;
-
-import javax.xml.bind.JAXBException;
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 
 public class Program {
 
@@ -25,7 +21,7 @@ public class Program {
             QueueNetwork network = builder.buildQueue();
 
             startBees(network);
-        } catch (IncorrectUtilizationException | InvalidNetworkException ex){
+        } catch (QueueException | InvalidNetworkException ex){
             ex.printStackTrace();
         }
     }

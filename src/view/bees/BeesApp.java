@@ -1,5 +1,7 @@
 package view.bees;
 
+import java.io.File;
+
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -16,8 +18,6 @@ import queue.bees.BeeAlgorithm;
 import view.App;
 import view.Results;
 
-import java.io.File;
-
 /**
  * Queues
  *
@@ -26,7 +26,7 @@ import java.io.File;
  * 13 : 51
  */
 public class BeesApp extends Application implements BeesCallbacks {
-
+	
     public static void main(String[] args) {
         launch(args);
     }

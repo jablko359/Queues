@@ -1,14 +1,15 @@
 package view;
 
 
+import java.io.File;
+
+import javax.xml.bind.JAXBException;
+
 import queue.QueueBuilder;
 import queue.QueueNetwork;
 import queue.exceptions.InvalidNetworkException;
-import queue.exceptions.IncorrectUtilizationException;
+import queue.exceptions.QueueException;
 import queue.graph.QueueSerialization;
-
-import javax.xml.bind.JAXBException;
-import java.io.File;
 
 /**
  * Queues
@@ -73,7 +74,7 @@ public class AppPresenter {
             } else {
                 appCallbacks.showError("Error creating queueNetwork");
             }
-        } catch (IncorrectUtilizationException | InvalidNetworkException ex){
+        } catch (QueueException | InvalidNetworkException ex){
             appCallbacks.showError(ex.getMessage());
         }
 

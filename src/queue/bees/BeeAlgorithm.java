@@ -1,11 +1,16 @@
 package queue.bees;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 import queue.QueueNetwork;
-import queue.exceptions.IncorrectUtilizationException;
+import queue.exceptions.QueueException;
 import queue.systems.FifoSystem;
 import queue.systems.QueueSystem;
-
-import java.util.*;
 
 /**
  * Created by Standy on 2017-01-07.
@@ -207,12 +212,13 @@ public class BeeAlgorithm {
         ((FifoSystem) systems.get(DziekanatNodeType.DZIEKAN.toString().toLowerCase())).setM(bee.getCoordinates().get(DziekanatNodeType.DZIEKAN));
         ((FifoSystem) systems.get(DziekanatNodeType.DOKTORANCKIE.toString().toLowerCase())).setM(bee.getCoordinates().get(DziekanatNodeType.DOKTORANCKIE));
 
-        try {
-            network.calculateParameters(false);
-        } catch (IncorrectUtilizationException e) {
-            e.printStackTrace();
-        }
-    }
+		try {
+			network.calculateParameters(false);
+		} catch (QueueException e) {
+			e.printStackTrace();
+		}
+	}
+
 
     private void decreaseTTL() {
         List<Bee> beesToRemove = new ArrayList<>();

@@ -3,7 +3,7 @@ package queue.exceptions;
 /**
  * Created by Igor on 07.01.2017.
  */
-public class IncorrectUtilizationException extends Exception {
+public class IncorrectUtilizationException extends QueueException {
     /**
 	 * 
 	 */
