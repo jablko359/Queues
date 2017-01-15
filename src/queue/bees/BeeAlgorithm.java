@@ -1,11 +1,16 @@
 package queue.bees;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 import queue.QueueNetwork;
-import queue.exceptions.IncorrectUtilizationException;
+import queue.exceptions.QueueException;
 import queue.systems.FifoSystem;
 import queue.systems.QueueSystem;
-
-import java.util.*;
 
 /**
  * Created by Standy on 2017-01-07.
@@ -201,7 +206,7 @@ public class BeeAlgorithm {
 
 		try {
 			network.calculateParameters(false);
-		} catch (IncorrectUtilizationException e) {
+		} catch (QueueException e) {
 			e.printStackTrace();
 		}
 	}

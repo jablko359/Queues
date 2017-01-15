@@ -4,8 +4,8 @@ import javax.xml.bind.JAXBException;
 
 import queue.QueueBuilder;
 import queue.QueueNetwork;
-import queue.exceptions.IncorrectUtilizationException;
 import queue.exceptions.InvalidNetworkException;
+import queue.exceptions.QueueException;
 import queue.graph.QueueSerialization;
 
 public class ClosedNetworkExample {
@@ -16,7 +16,7 @@ public class ClosedNetworkExample {
 	        QueueBuilder builder = new QueueBuilder(serialization);
 	        QueueNetwork network = builder.buildQueue();
 
-	    } catch (IncorrectUtilizationException | InvalidNetworkException ex){
+	    } catch (QueueException | InvalidNetworkException ex){
 	        ex.printStackTrace();
 	    }	
 	}

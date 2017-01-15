@@ -8,6 +8,7 @@ import javafx.scene.layout.VBox;
 import queue.Data;
 import queue.exceptions.IncorrectUtilizationException;
 import queue.exceptions.InvalidNetworkException;
+import queue.exceptions.QueueException;
 import queue.QueueBuilder;
 import queue.QueueNetwork;
 import queue.graph.EdgeData;
@@ -137,7 +138,7 @@ public class QueueBuilderDialog {
         try {
             QueueNetwork network = builder.buildQueue();
             return network;
-        } catch (IncorrectUtilizationException | InvalidNetworkException ex){
+        } catch (QueueException | InvalidNetworkException ex){
             ex.printStackTrace();
             return null;
         }

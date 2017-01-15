@@ -1,27 +1,46 @@
 package queue.systems;
 
-import queue.graph.NodeData;
-import queue.Data;
-import queue.exceptions.IncorrectUtilizationException;
-
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
+import lombok.Getter;
+import queue.Data;
+import queue.exceptions.IncorrectUtilizationException;
+import queue.graph.NodeData;
 
 /**
  * Created by Igor on 03.12.2016.
  */
 public abstract class QueueSystem {
 
+	public static final Comparator<QueueSystem> ORDER_COMPARATOR = new Comparator<QueueSystem>() {
+
+		@Override
+		public int compare(QueueSystem o1, QueueSystem o2) {
+			return o1.getId().compareTo(o2.getId());
+		}
+	};
+
     protected String id;
     //indexed position in network
     protected int position;
 
+    // systemType
+    @Getter
+    protected SystemType type;
+    
     //lambda
     protected Data clientLambda = new Data();
     //mi
+    @Getter
     protected double mi;
+    
+    // systemChannels
+    @Getter
+    protected int m;
 
     //Rho
     protected double rho;
@@ -74,7 +93,9 @@ public abstract class QueueSystem {
         this.id = id;
         this.position = position;
         this.outsideInput = data.getOutsideInput();
-        mi = data.getMi();
+        this.type = data.getSystemType();
+        this.mi = data.getMi();
+        this.m = data.getM();
     }
 
     public boolean validate() {

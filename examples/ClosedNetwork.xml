@@ -21,9 +21,9 @@
 		<entry>
 			<key>ksero</key>
 			<value>
-				<m>2</m>
-				<mi>2.0</mi>
-				<systemType>LIFO</systemType>
+				<m>1</m>
+				<mi>2</mi>
+				<systemType>FIFO</systemType>
 			</value>
 		</entry>
 		<entry>

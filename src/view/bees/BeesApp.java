@@ -25,7 +25,9 @@ import java.io.File;
  * 13 : 51
  */
 public class BeesApp extends Application implements BeesCallbacks {
-
+	public static void main(String[] args) {
+        launch(args);
+    }
     Button runBeesAlgorithm;
     Button fileChooseButton;
     BeesPresenter beesPresenter;

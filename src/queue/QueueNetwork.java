@@ -1,11 +1,14 @@
 package queue;
 
-import queue.exceptions.IncorrectUtilizationException;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import queue.exceptions.QueueException;
 import queue.systems.CalculatorFactory;
 import queue.systems.QueueSystem;
-import queue.systems.StateProbabilityCalculator;
-
-import java.util.*;
 
 /**
  * Created by Igor on 03.12.2016.
@@ -109,6 +112,6 @@ public abstract class QueueNetwork {
         this.systems = systems;
     }
 
-    public abstract void calculateParameters(boolean calculateLambdas) throws IncorrectUtilizationException;
+    public abstract void calculateParameters(boolean calculateLambdas) throws QueueException;
 
 }
