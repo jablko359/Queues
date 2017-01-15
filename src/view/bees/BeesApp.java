@@ -3,6 +3,7 @@ package view.bees;
 import java.io.File;
 
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -128,16 +129,41 @@ public class BeesApp extends Application implements BeesCallbacks {
         box.getChildren().add(configBox);
         //primary parameters
 
+
+        Label fCeluLAbel = new Label("Objective function parameters: ");
+        fCeluLAbel.setPadding(new Insets(10, 10, 10, 10));
+        HBox objectiveFunctionLayout = new HBox();
+        Label averageTimeLabel = new Label("average time coefficient");
+        averageTimeLabel.setMinHeight(27);
+
+        Label nrOfChannelsLabel = new Label("number of channels coefficient");
+        nrOfChannelsLabel.setMinHeight(27);
+
+        TextField averageTimeField = new TextField(String.valueOf(BeeAlgorithm.AVERAGE_TIME_COEFFICIENT));
+        TextField numberOfChannelsField = new TextField(String.valueOf(BeeAlgorithm.NUMBER_OF_CHANNELS_COEFFICIENT));
+        VBox objlabels = new VBox();
+        VBox objFields = new VBox();
+        objlabels.getChildren().addAll(averageTimeLabel, nrOfChannelsLabel);
+        objFields.getChildren().addAll(averageTimeField, numberOfChannelsField);
+
+        objectiveFunctionLayout.getChildren().addAll(objlabels, objFields);
+        box.getChildren().addAll(fCeluLAbel, objectiveFunctionLayout);
+
+
         showParamsLayout = new Button("Show system parameters");
         showParamsLayout.setOnAction(x -> {
-            if (beesPresenter == null || beesPresenter.getQueue() == null) return;
-            new QueueParamsLayout(beesPresenter.getQueue());
+            if (beesPresenter == null || beesPresenter.getQueue() == null) {
+                showError("Choose file first!");
+            } else new QueueParamsLayout(beesPresenter.getQueue());
         });
         runBeesAlgorithm = new Button("Run");
         runBeesAlgorithm.setOnAction(c -> {
             BeeAlgorithm beeAlgorithm = null;
 
             try {
+
+                BeeAlgorithm.AVERAGE_TIME_COEFFICIENT = Double.valueOf(averageTimeField.getText());
+                BeeAlgorithm.NUMBER_OF_CHANNELS_COEFFICIENT = Double.valueOf(numberOfChannelsField.getText());
 
                 BeeAlgorithm.ITERATIONS_NUMBER = Integer.valueOf(iterationsField.getText());
                 BeeAlgorithm.MAX_CHANNEL = Integer.valueOf(maxChannelField.getText());

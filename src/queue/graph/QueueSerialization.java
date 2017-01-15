@@ -14,7 +14,6 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import lombok.Getter;
 import lombok.Setter;
 import queue.Data;
 import queue.exceptions.InvalidNetworkException;
@@ -36,7 +35,6 @@ public class QueueSerialization {
     private Edges edges = new Edges();
     private Data clientLambdas = null;
     
-    @Getter
     @Setter
     private HashMap<String, Integer> networkCapacity = new HashMap<>();
 
@@ -63,7 +61,11 @@ public class QueueSerialization {
     public void setClientLambdas(Data clientLambdas) {
         this.clientLambdas = clientLambdas;
     }
-    
+
+    public Map<String, Integer> getNetworkCapacity() {
+        return networkCapacity;
+    }
+
     public boolean isNetworkClosed() throws InvalidNetworkException {
     	for(Entry<String, NodeData> systemEntry : systems.entrySet()) {
     		Map<String, Double> outputProbability = new HashMap<>();

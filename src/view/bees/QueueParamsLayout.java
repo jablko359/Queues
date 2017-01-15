@@ -63,7 +63,7 @@ public class QueueParamsLayout {
                     data.add("System: " + sys + ", klient: " + cli + ", LambdaT = " + network.getLambdaT(sys, cli));
                     data.add("System: " + sys + ", klient: " + cli + ", T = " + network.getT(sys, cli));
                     data.add("System: " + sys + ", klient: " + cli + ", W = " + network.getW(sys, cli));
-                } catch (IllegalStateException x) {
+                } catch (IllegalArgumentException | IllegalStateException x) {
                 }
             }
         }
