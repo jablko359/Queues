@@ -35,7 +35,10 @@ public class Program {
         int totalSolutionsNumber = 5;
         int bestSolutionsNeighberhoodNumber = 1;
         int exclusiveSolutionsNeighberhoodNumber = 2;
-        BeeAlgorithm beeAlgorithm = new BeeAlgorithm(network, bestSolutionsNumber, exclusiveSolutionsNumber, totalSolutionsNumber, bestSolutionsNeighberhoodNumber, exclusiveSolutionsNeighberhoodNumber);
+
+        BeeAlgorithm beeAlgorithm = new BeeAlgorithm(network, bestSolutionsNumber,
+                exclusiveSolutionsNumber, totalSolutionsNumber, bestSolutionsNeighberhoodNumber,
+                exclusiveSolutionsNeighberhoodNumber);
 
         //initiate beeAlgorithm
         beeAlgorithm.initialize();

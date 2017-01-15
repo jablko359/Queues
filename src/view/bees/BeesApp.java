@@ -1,5 +1,7 @@
 package view.bees;
 
+import java.io.File;
+
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -15,8 +17,6 @@ import queue.bees.BeeAlgorithm;
 import view.App;
 import view.Results;
 
-import java.io.File;
-
 /**
  * Queues
  *
@@ -25,10 +25,13 @@ import java.io.File;
  * 13 : 51
  */
 public class BeesApp extends Application implements BeesCallbacks {
-	public static void main(String[] args) {
+	
+    public static void main(String[] args) {
         launch(args);
     }
+
     Button runBeesAlgorithm;
+    Button showParamsLayout;
     Button fileChooseButton;
     BeesPresenter beesPresenter;
 
@@ -36,10 +39,15 @@ public class BeesApp extends Application implements BeesCallbacks {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+
+        primaryStage.setMinHeight(500);
+        primaryStage.setMinWidth(500);
+
         beesPresenter = new BeesPresenter(this);
         BorderPane root = new BorderPane();
 
         VBox box = new VBox();
+
         editBeeParams = new HBox();
 
         addInputFileButton(primaryStage, box);
@@ -84,31 +92,85 @@ public class BeesApp extends Application implements BeesCallbacks {
 
         editBeeParams.getChildren().addAll(labels, textFields);
 
-        editBeeParams.setVisible(false);
-
+//      editBeeParams.setVisible(false);
 
         box.getChildren().add(editBeeParams);
 
+
+        VBox configLabels = new VBox();
+        VBox configTextFields = new VBox();
+
+        //additional config
+        Label iterationsLAbel = new Label("Number of iterations");
+        iterationsLAbel.setMinHeight(27);
+        TextField iterationsField = new TextField(String.valueOf(BeeAlgorithm.ITERATIONS_NUMBER));
+
+
+        Label channelMins = new Label("Min number of channels");
+        channelMins.setMinHeight(27);
+        TextField minChannelField = new TextField(String.valueOf(BeeAlgorithm.MIN_CHANNEL));
+
+        Label channelMax = new Label("Max number of channels");
+        channelMax.setMinHeight(27);
+        TextField maxChannelField = new TextField(String.valueOf(BeeAlgorithm.MAX_CHANNEL));
+
+
+        Label TTL_label = new Label("TTL");
+        TTL_label.setMinHeight(27);
+        TextField ttlField = new TextField(String.valueOf(BeeAlgorithm.TTL));
+
+        configLabels.getChildren().addAll(iterationsLAbel, channelMins, channelMax, TTL_label);
+        configTextFields.getChildren().addAll(iterationsField, minChannelField, maxChannelField, ttlField);
+
+        HBox configBox = new HBox();
+
+        configBox.getChildren().addAll(configLabels, configTextFields);
+        box.getChildren().add(configBox);
+        //primary parameters
+
+        showParamsLayout = new Button("Show system parameters");
+        showParamsLayout.setOnAction(x -> {
+            if (beesPresenter == null || beesPresenter.getQueue() == null) return;
+            new QueueParamsLayout(beesPresenter.getQueue());
+        });
         runBeesAlgorithm = new Button("Run");
         runBeesAlgorithm.setOnAction(c -> {
-            BeeAlgorithm beeAlgorithm = new BeeAlgorithm(
-                    beesPresenter.getQueue(),
-                    Integer.valueOf(e_bestSolutionsNumber.getText()),
-                    Integer.valueOf(e_exclusiveSolutionsNumber.getText()),
-                    Integer.valueOf(e_totalSolutionsNumber.getText()),
-                    Integer.valueOf(e_bestSolutionsNeighberhoodNumber.getText()),
-                    Integer.valueOf(e_exclusiveSolutionsNeighberhoodNumber.getText())
-            );
+            BeeAlgorithm beeAlgorithm = null;
 
-            //initiate beeAlgorithm
-            beeAlgorithm.initialize();
+            try {
 
-            //calculate
-            beeAlgorithm.calculate();
+                BeeAlgorithm.ITERATIONS_NUMBER = Integer.valueOf(iterationsField.getText());
+                BeeAlgorithm.MAX_CHANNEL = Integer.valueOf(maxChannelField.getText());
+                BeeAlgorithm.MIN_CHANNEL = Integer.valueOf(minChannelField.getText());
+                BeeAlgorithm.TTL = Integer.valueOf(ttlField.getText());
+
+                beeAlgorithm = new BeeAlgorithm(
+                        beesPresenter.getQueue(),
+                        Integer.valueOf(e_bestSolutionsNumber.getText()),
+                        Integer.valueOf(e_exclusiveSolutionsNumber.getText()),
+                        Integer.valueOf(e_totalSolutionsNumber.getText()),
+                        Integer.valueOf(e_bestSolutionsNeighberhoodNumber.getText()),
+                        Integer.valueOf(e_exclusiveSolutionsNeighberhoodNumber.getText())
+                );
+            } catch (NumberFormatException x) {
+                showError("Invalid parameters! Check if parameters " +
+                        "(iterations number, min,max channel, TTL)" +
+                        " are valid");
+            }
+            if (beeAlgorithm != null) {
+                //initiate beeAlgorithm
+                beeAlgorithm.initialize();
+
+                //calculate
+                beeAlgorithm.calculate();
+
+                new BeesResultDialog(beeAlgorithm);
+            }
         });
 
+        box.getChildren().add(showParamsLayout);
         box.getChildren().add(runBeesAlgorithm);
-        runBeesAlgorithm.setVisible(false);
+//        runBeesAlgorithm.setVisible(false);
         root.setCenter(box);
 
         primaryStage.setTitle("Bees");
@@ -116,6 +178,7 @@ public class BeesApp extends Application implements BeesCallbacks {
         primaryStage.setScene(new Scene(root, 300, 250));
         primaryStage.show();
     }
+
 
     private void addInputFileButton(Stage primaryStage, Pane parent) {
         fileChooseButton = new Button();
@@ -145,8 +208,8 @@ public class BeesApp extends Application implements BeesCallbacks {
     @Override
     public void showEditBeeParameters() {
         System.out.println("showEditBeeParameters");
-        editBeeParams.setVisible(true);
-        runBeesAlgorithm.setVisible(true);
+//        editBeeParams.setVisible(true);
+//        runBeesAlgorithm.setVisible(true);
 
     }
 }

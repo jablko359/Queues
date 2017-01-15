@@ -172,4 +172,8 @@ public class QueueSerialization {
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
         marshaller.marshal(serialization ,new File("Test.xml"));
     }
+
+    public Map<String, Integer> getNetworkCapacity() {
+        return null;
+    }
 }
