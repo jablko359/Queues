@@ -5,6 +5,8 @@ import javafx.scene.control.*;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.VBox;
+import org.apache.commons.math3.linear.RealMatrix;
+import queue.ClosedNetwork;
 import queue.QueueNetwork;
 
 import java.util.ArrayList;
@@ -42,9 +44,7 @@ public class QueueParamsLayout {
     public static Node newParamsLayout(QueueNetwork network) {
         VBox node = new VBox();
 
-
         List<String> infos = produceInfo(network);
-
 
         Button clipBoard = new Button("Copy to clipboard");
         clipBoard.setOnAction(c -> {
@@ -63,7 +63,7 @@ public class QueueParamsLayout {
             alert.setContentText("COPIED TO CLIPBOARD!");
             alert.showAndWait();
         });
-    node.getChildren().add(clipBoard);
+        node.getChildren().add(clipBoard);
         for (String s : infos) {
             node.getChildren().add(new Label(s));
         }
@@ -72,7 +72,19 @@ public class QueueParamsLayout {
     }
 
     private static List<String> produceInfo(QueueNetwork network) {
+
+        if (network instanceof ClosedNetwork) {
+            ClosedNetwork net = (ClosedNetwork) network;
+            return produceInfoForClosedNetwork(net);
+        } else {
+            return produceInfoForOpenNetwork(network);
+        }
+
+    }
+
+    private static List<String> produceInfoForOpenNetwork(QueueNetwork network) {
         List<String> data = new ArrayList<>();
+
 
         data.add("K: " + network.getK());
 
@@ -92,7 +104,27 @@ public class QueueParamsLayout {
             }
         }
 
-
         return data;
+
+    }
+
+    private static List<String> produceInfoForClosedNetwork(ClosedNetwork net) {
+        List<String> data = new ArrayList<>();
+        data.add("Client lambdas: ");
+        data.add(net.getClientLambdas().toString());
+        data.add("K: ");
+        data.add(printRealmMatrix(net.getAvgArrivals()));
+        data.add("T: ");
+        data.add(printRealmMatrix(net.getResidenceTime()));
+        data.add("W: ");
+        data.add(printRealmMatrix(net.getWaitTime()));
+        data.add("Q: ");
+        data.add(printRealmMatrix(net.getQueueLength()));
+        return data;
+    }
+
+    private static String printRealmMatrix(RealMatrix matrix) {
+        String k = matrix.toString().replace("Array2DRowRealMatrix", "").replaceAll("},", "},\n");
+        return k;
     }
 }
