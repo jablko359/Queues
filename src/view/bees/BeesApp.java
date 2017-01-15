@@ -39,10 +39,15 @@ public class BeesApp extends Application implements BeesCallbacks {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+
+        primaryStage.setMinHeight(500);
+        primaryStage.setMinWidth(500);
+
         beesPresenter = new BeesPresenter(this);
         BorderPane root = new BorderPane();
 
         VBox box = new VBox();
+
         editBeeParams = new HBox();
 
         addInputFileButton(primaryStage, box);
@@ -87,62 +92,40 @@ public class BeesApp extends Application implements BeesCallbacks {
 
         editBeeParams.getChildren().addAll(labels, textFields);
 
-//        editBeeParams.setVisible(false);
-
+//      editBeeParams.setVisible(false);
 
         box.getChildren().add(editBeeParams);
 
+
+        VBox configLabels = new VBox();
+        VBox configTextFields = new VBox();
+
         //additional config
-        HBox iterations = new HBox();
         Label iterationsLAbel = new Label("Number of iterations");
+        iterationsLAbel.setMinHeight(27);
         TextField iterationsField = new TextField(String.valueOf(BeeAlgorithm.ITERATIONS_NUMBER));
-//        iterationsField.textProperty().addListener((observable, oldValue, newValue) -> {
-//            if (newValue.length() > 0) try {
-//                BeeAlgorithm.ITERATIONS_NUMBER = Integer.parseInt(newValue);
-//                System.out.println("ITERATIONS_NUMBER set to " + newValue);
-//            } catch (Exception x) {
-//            }
-//        });
-        iterations.getChildren().addAll(iterationsLAbel, iterationsField);
-        box.getChildren().add(iterations);
 
-        HBox channels = new HBox();
+
         Label channelMins = new Label("Min number of channels");
+        channelMins.setMinHeight(27);
         TextField minChannelField = new TextField(String.valueOf(BeeAlgorithm.MIN_CHANNEL));
-//        minChannelField.textProperty().addListener((oo, o, newValue) -> {
-//            if (newValue.length() > 0) try {
-//                BeeAlgorithm.MIN_CHANNEL = Integer.parseInt(newValue);
-//                System.out.println("MIN_CHANNEL set to " + newValue);
-//            } catch (Exception x) {
-//            }
-//        });
+
         Label channelMax = new Label("Max number of channels");
+        channelMax.setMinHeight(27);
         TextField maxChannelField = new TextField(String.valueOf(BeeAlgorithm.MAX_CHANNEL));
-//        minChannelField.textProperty().addListener((xxx, xx, newValue) -> {
-//            if (newValue.length() > 0) try {
-//                BeeAlgorithm.MAX_CHANNEL = Integer.parseInt(newValue);
-//                System.out.println("MAX_CHANNEL set to " + newValue);
-//            } catch (Exception x) {
-//
-//            }
-//        });
-        channels.getChildren().addAll(channelMins, minChannelField, channelMax, maxChannelField);
-        box.getChildren().add(channels);
 
-        Label TTLable = new Label("TTL");
+
+        Label TTL_label = new Label("TTL");
+        TTL_label.setMinHeight(27);
         TextField ttlField = new TextField(String.valueOf(BeeAlgorithm.TTL));
-        HBox ttlBo = new HBox();
-//        ttlField.textProperty().addListener((o, oo, nev) -> {
-//            if (nev.length() > 0) try {
-//                BeeAlgorithm.TTL = Integer.parseInt(nev);
-//                System.out.println("TTL set to " + nev);
-//            } catch (Exception x) {
-//
-//            }
-//        });
-        ttlBo.getChildren().addAll(TTLable, ttlField);
-        box.getChildren().add(ttlBo);
 
+        configLabels.getChildren().addAll(iterationsLAbel, channelMins, channelMax, TTL_label);
+        configTextFields.getChildren().addAll(iterationsField, minChannelField, maxChannelField, ttlField);
+
+        HBox configBox = new HBox();
+
+        configBox.getChildren().addAll(configLabels, configTextFields);
+        box.getChildren().add(configBox);
         //primary parameters
 
         showParamsLayout = new Button("Show system parameters");
@@ -153,7 +136,6 @@ public class BeesApp extends Application implements BeesCallbacks {
         runBeesAlgorithm = new Button("Run");
         runBeesAlgorithm.setOnAction(c -> {
             BeeAlgorithm beeAlgorithm = null;
-
 
             try {
 
