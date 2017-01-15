@@ -156,6 +156,11 @@ public class BeesApp extends Application implements BeesCallbacks {
         });
         runBeesAlgorithm = new Button("Run");
         runBeesAlgorithm.setOnAction(c -> {
+
+            if (!beesPresenter.getQueue().isOpen()){
+                showError("Cannot calculate parameters, queue network must be open!");
+                return;
+            }
             BeeAlgorithm beeAlgorithm = null;
 
             try {
