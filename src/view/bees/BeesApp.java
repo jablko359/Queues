@@ -27,6 +27,7 @@ import java.io.File;
 public class BeesApp extends Application implements BeesCallbacks {
 
     Button runBeesAlgorithm;
+    Button showParamsLayout;
     Button fileChooseButton;
     BeesPresenter beesPresenter;
 
@@ -87,24 +88,91 @@ public class BeesApp extends Application implements BeesCallbacks {
 
         box.getChildren().add(editBeeParams);
 
+        //additional config
+//        HBox iterations = new HBox();
+//        Label iterationsLAbel = new Label("Number of iterations");
+//        TextField iterationsField = new TextField(String.valueOf(BeeAlgorithm.ITERATIONS_NUMBER));
+//        iterationsField.textProperty().addListener((observable, oldValue, newValue) -> {
+//            if (newValue.length() > 0) try {
+//                BeeAlgorithm.ITERATIONS_NUMBER = Integer.parseInt(newValue);
+//                System.out.println("ITERATIONS_NUMBER set to " + newValue);
+//            } catch (Exception x) {
+//            }
+//        });
+//        iterations.getChildren().addAll(iterationsLAbel, iterationsField);
+//        box.getChildren().add(iterations);
+//
+//        HBox channels = new HBox();
+//        Label channelMins = new Label("Min number of channels");
+//        TextField minChannelField = new TextField(String.valueOf(BeeAlgorithm.MIN_CHANNEL));
+//        minChannelField.textProperty().addListener((oo, o, newValue) -> {
+//            if (newValue.length() > 0) try {
+//                BeeAlgorithm.MIN_CHANNEL = Integer.parseInt(newValue);
+//                System.out.println("MIN_CHANNEL set to " + newValue);
+//            } catch (Exception x) {
+//            }
+//        });
+//        Label channelMax = new Label("Max number of channels");
+//        TextField maxChannelField = new TextField(String.valueOf(BeeAlgorithm.MAX_CHANNEL));
+//        minChannelField.textProperty().addListener((xxx, xx, newValue) -> {
+//            if (newValue.length() > 0) try {
+//                BeeAlgorithm.MAX_CHANNEL = Integer.parseInt(newValue);
+//                System.out.println("MAX_CHANNEL set to " + newValue);
+//            } catch (Exception x) {
+//
+//            }
+//        });
+//        channels.getChildren().addAll(channelMins, minChannelField, channelMax, maxChannelField);
+//        box.getChildren().add(iterations);
+//
+//        Label TTLable = new Label("TTL");
+//        TextField ttlField = new TextField(String.valueOf(BeeAlgorithm.TTL));
+//        HBox ttlBo = new HBox();
+//        ttlField.textProperty().addListener((o, oo, nev) -> {
+//            if (nev.length() > 0) try {
+//                BeeAlgorithm.TTL = Integer.parseInt(nev);
+//                System.out.println("TTL set to " + nev);
+//            } catch (Exception x) {
+//
+//            }
+//        });
+//        ttlBo.getChildren().addAll(TTLable, ttlField);
+//        box.getChildren().add(ttlBo);
+
+        //primary parameters
+
+        showParamsLayout = new Button("Show system parameters");
+        showParamsLayout.setOnAction(x -> {
+            if (beesPresenter == null || beesPresenter.getQueue() == null) return;
+            new QueueParamsLayout(beesPresenter.getQueue());
+        });
         runBeesAlgorithm = new Button("Run");
         runBeesAlgorithm.setOnAction(c -> {
-            BeeAlgorithm beeAlgorithm = new BeeAlgorithm(
-                    beesPresenter.getQueue(),
-                    Integer.valueOf(e_bestSolutionsNumber.getText()),
-                    Integer.valueOf(e_exclusiveSolutionsNumber.getText()),
-                    Integer.valueOf(e_totalSolutionsNumber.getText()),
-                    Integer.valueOf(e_bestSolutionsNeighberhoodNumber.getText()),
-                    Integer.valueOf(e_exclusiveSolutionsNeighberhoodNumber.getText())
-            );
+            BeeAlgorithm beeAlgorithm = null;
+            try {
+                beeAlgorithm = new BeeAlgorithm(
+                        beesPresenter.getQueue(),
+                        Integer.valueOf(e_bestSolutionsNumber.getText()),
+                        Integer.valueOf(e_exclusiveSolutionsNumber.getText()),
+                        Integer.valueOf(e_totalSolutionsNumber.getText()),
+                        Integer.valueOf(e_bestSolutionsNeighberhoodNumber.getText()),
+                        Integer.valueOf(e_exclusiveSolutionsNeighberhoodNumber.getText())
+                );
+            } catch (NumberFormatException x) {
+                showError("Invalid parameters!");
+            }
+            if (beeAlgorithm != null) {
+                //initiate beeAlgorithm
+                beeAlgorithm.initialize();
 
-            //initiate beeAlgorithm
-            beeAlgorithm.initialize();
+                //calculate
+                beeAlgorithm.calculate();
 
-            //calculate
-            beeAlgorithm.calculate();
+                new BeesResultDialog(beeAlgorithm);
+            }
         });
 
+        box.getChildren().add(showParamsLayout);
         box.getChildren().add(runBeesAlgorithm);
         runBeesAlgorithm.setVisible(false);
         root.setCenter(box);
@@ -114,6 +182,7 @@ public class BeesApp extends Application implements BeesCallbacks {
         primaryStage.setScene(new Scene(root, 300, 250));
         primaryStage.show();
     }
+
 
     private void addInputFileButton(Stage primaryStage, Pane parent) {
         fileChooseButton = new Button();
