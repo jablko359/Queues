@@ -24,7 +24,43 @@ public class ClosedNetwork extends QueueNetwork {
 	private LinkedHashMap<String, QueueSystem> systems = new LinkedHashMap<>();
 	private RealVector clientLambdas;
 	private RealMatrix avgArrivals, queueLength, waitTime, residenceTime, lambdas, mis;
-	
+
+	public RealMatrix getAvgVisits() {
+		return avgVisits;
+	}
+
+	public LinkedHashMap<String, Integer> getNetworkCapacity() {
+		return networkCapacity;
+	}
+
+	public RealVector getClientLambdas() {
+		return clientLambdas;
+	}
+
+	public RealMatrix getAvgArrivals() {
+		return avgArrivals;
+	}
+
+	public RealMatrix getQueueLength() {
+		return queueLength;
+	}
+
+	public RealMatrix getWaitTime() {
+		return waitTime;
+	}
+
+	public RealMatrix getResidenceTime() {
+		return residenceTime;
+	}
+
+	public RealMatrix getLambdas() {
+		return lambdas;
+	}
+
+	public RealMatrix getMis() {
+		return mis;
+	}
+
 	public ClosedNetwork(Map<String, QueueSystem> systems, Map<String, Integer> networkCapacity) {
 		super(systems, null);
 		// populate maps with correct order
@@ -130,7 +166,6 @@ public class ClosedNetwork extends QueueNetwork {
 		// Qir
 		queueLength = Utils.ebeMultiply(lambdas, waitTime);
 		System.out.println("Q: " + queueLength);
-		
 	}
 	
 }

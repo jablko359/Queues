@@ -1,7 +1,5 @@
 package view.bees;
 
-import java.io.File;
-
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -18,6 +16,8 @@ import queue.bees.BeeAlgorithm;
 import view.App;
 import view.Results;
 
+import java.io.File;
+
 /**
  * Queues
  *
@@ -26,7 +26,7 @@ import view.Results;
  * 13 : 51
  */
 public class BeesApp extends Application implements BeesCallbacks {
-	
+
     public static void main(String[] args) {
         launch(args);
     }
@@ -52,7 +52,6 @@ public class BeesApp extends Application implements BeesCallbacks {
         editBeeParams = new HBox();
 
         addInputFileButton(primaryStage, box);
-
 
         TextField e_bestSolutionsNumber = new TextField("2");
         TextField e_exclusiveSolutionsNumber = new TextField("1");
@@ -89,7 +88,6 @@ public class BeesApp extends Application implements BeesCallbacks {
         labels.getChildren().add(l_totalSolutionsNumber);//= 5;
         labels.getChildren().add(l_bestSolutionsNeighberhoodNumber);//= 1;
         labels.getChildren().add(l_exclusiveSolutionsNeighberhoodNumber);//= 2;
-
 
         editBeeParams.getChildren().addAll(labels, textFields);
 
@@ -215,6 +213,8 @@ public class BeesApp extends Application implements BeesCallbacks {
             fileChooser.setTitle("input file");
             File file = fileChooser.showOpenDialog(primaryStage);
             if (beesPresenter != null) beesPresenter.onFileChosen(file);
+
+            if (file != null) fileChooseButton.setText("Current file: " + file.getName());
 
         });
         parent.getChildren().add(fileChooseButton);
