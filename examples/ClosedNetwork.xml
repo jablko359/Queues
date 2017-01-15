@@ -5,33 +5,33 @@
 		<entry>
 			<key>winda</key>
 			<value>
-				<m>2</m>
-				<mi>4</mi>
+				<m>4</m>
+				<mi>6</mi>
 				<systemType>FIFO</systemType>
 			</value>
 		</entry>
 		<entry>
 			<key>portiernia</key>
 			<value>
-				<m>1</m>
-				<mi>1</mi>
+				<m>2</m>
+				<mi>6</mi>
 				<systemType>FIFO</systemType>
 			</value>
 		</entry>
 		<entry>
 			<key>ksero</key>
 			<value>
-				<m>1</m>
-				<mi>2</mi>
+				<m>2</m>
+				<mi>6</mi>
 				<systemType>FIFO</systemType>
 			</value>
 		</entry>
 		<entry>
 			<key>kierowniczka</key>
 			<value>
-				<m>1</m>
-				<mi>0.5</mi>
-				<systemType>LIFO</systemType>
+				<m>2</m>
+				<mi>6</mi>
+				<systemType>FIFO</systemType>
 			</value>
 		</entry>
 				
@@ -159,7 +159,7 @@
 	<networkCapacity>
 		<entry>
 			<key>Sprzataczka</key>
-			<value>4</value></entry>
+			<value>2</value></entry>
 		<entry>
 			<key>Student</key>
-			<value>50</value></entry></networkCapacity></queueNetwork>
+			<value>5</value></entry></networkCapacity></queueNetwork>

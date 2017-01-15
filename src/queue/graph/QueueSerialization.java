@@ -1,8 +1,10 @@
 package queue.graph;
 
-import queue.Data;
-import queue.exceptions.InvalidNetworkException;
-import queue.systems.SystemType;
+import java.io.File;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -14,12 +16,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import lombok.Getter;
 import lombok.Setter;
-
-import java.io.File;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
+import queue.Data;
+import queue.exceptions.InvalidNetworkException;
+import queue.systems.SystemType;
 
 /**
  * Created by Igor on 03.12.2016.
@@ -171,9 +170,5 @@ public class QueueSerialization {
 
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
         marshaller.marshal(serialization ,new File("Test.xml"));
-    }
-
-    public Map<String, Integer> getNetworkCapacity() {
-        return null;
     }
 }

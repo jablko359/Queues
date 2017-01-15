@@ -50,7 +50,7 @@ public class ClientLambdaCalculator {
 			double denominator = 0;
 			for(int systemIdx = 0; systemIdx < i; systemIdx++) {
 				double utilization = utilCalc.getSystemUtilization(systemIdx, previousLambdas);
-				double overloadProbability = utilCalc.getChannelOverloadPropability(systemIdx, previousLambdas);
+				double overloadProbability = utilCalc.getChannelOverloadProbability(systemIdx, previousLambdas);
 				double visits = avgVisits.getEntry(systemIdx, clientIdx);
 					
 				FixCalculator fix = getFixCalculator(systems[systemIdx]);

@@ -14,6 +14,7 @@ import org.apache.commons.math3.linear.RealVector;
 import queue.exceptions.QueueException;
 import queue.systems.QueueSystem;
 import queue.systems.sum.ClientLambdaCalculator;
+import queue.systems.sum.NodeArrivalsCalculator;
 
 public class ClosedNetwork extends QueueNetwork {
 
@@ -21,6 +22,7 @@ public class ClosedNetwork extends QueueNetwork {
 	private LinkedHashMap<String, Integer> networkCapacity = new LinkedHashMap<>();
 	private LinkedHashMap<String, QueueSystem> systems = new LinkedHashMap<>();
 	private RealVector clientLambdas;
+	private RealMatrix avgArrivals;
 	
 	public ClosedNetwork(Map<String, QueueSystem> systems, Map<String, Integer> networkCapacity) {
 		super(systems, null);
@@ -94,19 +96,14 @@ public class ClosedNetwork extends QueueNetwork {
 		// compute eir 
 		avgVisits = computeEir(getSystemsAsArray(), getClientsAsArray());
 		
-		int r = 0;
-		for(String clientId : networkCapacity.keySet()) {
-			int i = 0;
-			for(String systemId : systems.keySet()) {
-				System.out.println(String.format("Avg %s visits @ %s: %f", clientId, systemId, avgVisits.getEntry(i, r)));
-				i++;
-			}
-			r++;
-		}
-		
 		// compute client lambdas
 		ClientLambdaCalculator clientLambdasCalc = new ClientLambdaCalculator(getSystemsAsArray(), getCapacitiesAsArray(), avgVisits);
 		clientLambdas = clientLambdasCalc.calculate();
 		System.out.println("ClientLambdas: " + clientLambdas);
+		
+		// compute average client arrivals for each node
+		NodeArrivalsCalculator nodeArrivalsCalc = new NodeArrivalsCalculator(getSystemsAsArray(), getCapacitiesAsArray(), avgVisits);
+		avgArrivals = nodeArrivalsCalc.calculate(clientLambdas);
+		System.out.println("K: "+  avgArrivals);
 	}
 }

@@ -19,7 +19,7 @@ public class UtilizationCalculator {
 		this.avgVisits = avgVisits;
 	}
 	
-	public double getChannelOverloadPropability(int systemIdx, RealVector clientLambda) throws QueueException {
+	public double getChannelOverloadProbability(int systemIdx, RealVector clientLambda) throws QueueException {
 		QueueSystem system = systems[systemIdx];
 		int systemChannels = system.getM();
 		double systemUtilization = getSystemUtilization(systemIdx, clientLambda);
@@ -36,23 +36,26 @@ public class UtilizationCalculator {
 		probability /= Utils.factorial(systemChannels) * (1 - systemUtilization);
 		probability /= denominator;
 		
-		if (probability > 1)
+		if(probability > 1)
 			throw new IncorrectProbabilityException(system.getId(), "overload", probability);
 		return probability;
 	}
 	
-	public double getSystemUtilization(int systemIdx, RealVector clientLambda) throws IncorrectUtilizationException {
+	public double getSystemUtilizationForClient(int systemIdx, int clientIdx, double clientLambda) {
 		QueueSystem system = systems[systemIdx];
+		return clientLambda * avgVisits.getEntry(systemIdx, clientIdx) / (system.getM() * system.getMi());
+	}
+	
+	public double getSystemUtilization(int systemIdx, RealVector clientLambda) throws IncorrectUtilizationException {
 		double systemUtilization = 0;
-		int systemChannels = system.getM();
-		double systemPerformance = system.getMi();
-		
 		for(int clientIdx = 0; clientIdx < clientLambda.getDimension(); clientIdx++) {
-			systemUtilization += clientLambda.getEntry(clientIdx) * avgVisits.getEntry(systemIdx, clientIdx) / (systemChannels * systemPerformance);
+			systemUtilization += getSystemUtilizationForClient(systemIdx, clientIdx, clientLambda.getEntry(clientIdx));
 		}
 		
-		if (systemUtilization >= 1)
-			throw new IncorrectUtilizationException(system.getId(), systemUtilization);
+		if (systemUtilization >= 1) {
+			System.out.println("Client lambda: " + clientLambda);
+			throw new IncorrectUtilizationException(systems[systemIdx].getId(), systemUtilization);
+		}
 		return systemUtilization;
 	}
 }
