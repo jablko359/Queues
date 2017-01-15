@@ -2,6 +2,7 @@ package queue.systems.sum;
 
 import java.util.stream.IntStream;
 
+import org.apache.commons.math3.linear.Array2DRowRealMatrix;
 import org.apache.commons.math3.linear.ArrayRealVector;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.linear.RealVector;
@@ -28,6 +29,17 @@ public class ClientLambdaCalculator {
 		r = capacities.length;
 		utilCalc = new UtilizationCalculator(systems, avgVisits);
 		networkCapacity = IntStream.of(capacities).sum();
+	}
+	
+	public RealMatrix calculateForNetwork() throws QueueException {
+		RealMatrix lambdas = new Array2DRowRealMatrix(i, r);
+		RealVector clientLambdas = calculate();
+		
+		for(int systemIdx = 0; systemIdx < i; systemIdx++) {
+			lambdas.setRowVector(systemIdx, clientLambdas.ebeMultiply(avgVisits.getRowVector(systemIdx)));
+		}
+		
+		return lambdas;
 	}
 	
 	public RealVector calculate() throws QueueException {

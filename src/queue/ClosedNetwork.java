@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.apache.commons.math3.linear.Array2DRowRealMatrix;
 import org.apache.commons.math3.linear.ArrayRealVector;
 import org.apache.commons.math3.linear.DecompositionSolver;
 import org.apache.commons.math3.linear.LUDecomposition;
@@ -22,7 +23,7 @@ public class ClosedNetwork extends QueueNetwork {
 	private LinkedHashMap<String, Integer> networkCapacity = new LinkedHashMap<>();
 	private LinkedHashMap<String, QueueSystem> systems = new LinkedHashMap<>();
 	private RealVector clientLambdas;
-	private RealMatrix avgArrivals;
+	private RealMatrix avgArrivals, queueLength, waitTime, residenceTime, lambdas, mis;
 	
 	public ClosedNetwork(Map<String, QueueSystem> systems, Map<String, Integer> networkCapacity) {
 		super(systems, null);
@@ -99,11 +100,37 @@ public class ClosedNetwork extends QueueNetwork {
 		// compute client lambdas
 		ClientLambdaCalculator clientLambdasCalc = new ClientLambdaCalculator(getSystemsAsArray(), getCapacitiesAsArray(), avgVisits);
 		clientLambdas = clientLambdasCalc.calculate();
+		lambdas = clientLambdasCalc.calculateForNetwork();
 		System.out.println("ClientLambdas: " + clientLambdas);
 		
 		// compute average client arrivals for each node
 		NodeArrivalsCalculator nodeArrivalsCalc = new NodeArrivalsCalculator(getSystemsAsArray(), getCapacitiesAsArray(), avgVisits);
 		avgArrivals = nodeArrivalsCalc.calculate(clientLambdas);
 		System.out.println("K: "+  avgArrivals);
+		
+		/*
+		 * calculate standard parameters
+		 */
+		
+		// Tir
+		residenceTime = Utils.ebeDivide(avgArrivals, lambdas);
+		System.out.println("T: " + residenceTime);
+		
+		// mi ir
+		mis = new Array2DRowRealMatrix(systems.size(), networkCapacity.size());
+		int i =0;
+		for(QueueSystem system : systems.values()) {
+			mis.setRowVector(i++, new ArrayRealVector(networkCapacity.size(), system.getMi()));
+		}
+		
+		// Wir
+		waitTime = Utils.ebeApply(residenceTime, mis, (a, b) -> a - 1/b);
+		System.out.println("W: " + waitTime);
+		
+		// Qir
+		queueLength = Utils.ebeMultiply(lambdas, waitTime);
+		System.out.println("Q: " + queueLength);
+		
 	}
+	
 }
