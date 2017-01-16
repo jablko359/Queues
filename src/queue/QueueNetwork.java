@@ -18,6 +18,10 @@ public abstract class QueueNetwork {
     protected Set<String> activeCustomerTypes;
     protected CalculatorFactory calculatorFactory;
 
+    public boolean isOpen(){
+        return this instanceof OpenNetwork;
+    }
+
     protected QueueNetwork(Map<String,QueueSystem> systems, CalculatorFactory factory) {
         this.systems = systems;
         this.calculatorFactory = factory;
