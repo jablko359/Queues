@@ -8,6 +8,8 @@ import javafx.scene.layout.VBox;
 import org.apache.commons.math3.linear.RealMatrix;
 import queue.ClosedNetwork;
 import queue.QueueNetwork;
+import queue.bees.Bee;
+import queue.bees.BeeAlgorithm;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +22,7 @@ import java.util.List;
  * 01 : 18
  */
 public class QueueParamsLayout {
-    public QueueParamsLayout(QueueNetwork network) {
+    public QueueParamsLayout(QueueNetwork network, BeeAlgorithm beeAlgorithm) {
         Dialog<Boolean> dialog = new Dialog<>();
 
         VBox rootView = new VBox();
@@ -28,7 +30,7 @@ public class QueueParamsLayout {
         ButtonType okButton = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().add(okButton);
 
-        ScrollPane pane = new ScrollPane(newParamsLayout(network));
+        ScrollPane pane = new ScrollPane(newParamsLayout(network, beeAlgorithm));
 
         pane.setMaxHeight(400);
 
@@ -41,10 +43,10 @@ public class QueueParamsLayout {
         dialog.showAndWait().ifPresent(createdQueue -> dialog.close());
     }
 
-    public static Node newParamsLayout(QueueNetwork network) {
+    public static Node newParamsLayout(QueueNetwork network, BeeAlgorithm beeAlgorithm) {
         VBox node = new VBox();
 
-        List<String> infos = produceInfo(network);
+        List<String> infos = produceInfo(network, beeAlgorithm);
 
         Button clipBoard = new Button("Copy to clipboard");
         clipBoard.setOnAction(c -> {
@@ -71,18 +73,18 @@ public class QueueParamsLayout {
         return node;
     }
 
-    private static List<String> produceInfo(QueueNetwork network) {
+    private static List<String> produceInfo(QueueNetwork network, BeeAlgorithm beeAlgorithm) {
 
         if (network instanceof ClosedNetwork) {
             ClosedNetwork net = (ClosedNetwork) network;
-            return produceInfoForClosedNetwork(net);
+            return produceInfoForClosedNetwork(net, beeAlgorithm);
         } else {
-            return produceInfoForOpenNetwork(network);
+            return produceInfoForOpenNetwork(network, beeAlgorithm);
         }
 
     }
 
-    private static List<String> produceInfoForOpenNetwork(QueueNetwork network) {
+    private static List<String> produceInfoForOpenNetwork(QueueNetwork network, BeeAlgorithm beeAlgorithm) {
         List<String> data = new ArrayList<>();
 
 
@@ -96,10 +98,19 @@ public class QueueParamsLayout {
                 try {
                     data.add("System: " + sys + ", klient: " + cli + ", K = " + network.getK(cli, sys));
                     data.add("System: " + sys + ", klient: " + cli + ", Q = " + network.getQ(sys, cli));
-                    data.add("System: " + sys + ", klient: " + cli + ", LambdaT = " + network.getLambdaT(sys, cli));
                     data.add("System: " + sys + ", klient: " + cli + ", T = " + network.getT(sys, cli));
                     data.add("System: " + sys + ", klient: " + cli + ", W = " + network.getW(sys, cli));
                 } catch (IllegalArgumentException | IllegalStateException x) {
+                }
+            }
+        }
+
+        String prev = "";
+        if (beeAlgorithm != null) {
+            for (Bee bee : beeAlgorithm.getGlobalBestBees()) {
+                if (!prev.equals(bee.toString())) {
+                    prev = bee.toString();
+                    data.add(bee.toString());
                 }
             }
         }
@@ -108,10 +119,12 @@ public class QueueParamsLayout {
 
     }
 
-    private static List<String> produceInfoForClosedNetwork(ClosedNetwork net) {
+    private static List<String> produceInfoForClosedNetwork(ClosedNetwork net, BeeAlgorithm beeAlgorithm) {
         List<String> data = new ArrayList<>();
         data.add("Client lambdas: ");
         data.add(net.getClientLambdas().toString());
+		data.add("A: ");
+		data.add(printRealmMatrix(net.getAvgVisits()));
         data.add("K: ");
         data.add(printRealmMatrix(net.getAvgArrivals()));
         data.add("T: ");
@@ -120,6 +133,17 @@ public class QueueParamsLayout {
         data.add(printRealmMatrix(net.getWaitTime()));
         data.add("Q: ");
         data.add(printRealmMatrix(net.getQueueLength()));
+
+        String prev = "";
+        if (beeAlgorithm != null) {
+            for (Bee bee : beeAlgorithm.getGlobalBestBees()) {
+                if (!prev.equals(bee.toString())) {
+                    prev = bee.toString();
+                    data.add(bee.toString());
+                }
+            }
+        }
+
         return data;
     }
 

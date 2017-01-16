@@ -7,7 +7,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import queue.ClosedNetwork;
 import queue.QueueNetwork;
+import queue.exceptions.IncorrectUtilizationException;
 import queue.exceptions.QueueException;
 import queue.systems.FifoSystem;
 import queue.systems.QueueSystem;
@@ -27,7 +29,7 @@ public class BeeAlgorithm {
 
     public static double AVERAGE_TIME_COEFFICIENT = 100;
 
-    public static double NUMBER_OF_CHANNELS_COEFFICIENT = 50;
+    public static double NUMBER_OF_CHANNELS_COEFFICIENT = 30;
 
     //siec
     private QueueNetwork network;
@@ -89,12 +91,11 @@ public class BeeAlgorithm {
 
             Bee bee = new Bee(TTL, coordinates);
 
-            updateM(bee);
+            if (!updateM(bee)) {
+                i = i -1;
+                continue;
+            }
 
-            //TODO TYMCZASOWE LOSOWANIE
-            //pobrac czas przebywania w kolejce
-//            double queeTime = network.getTimeInQuee();
-//			double queeTime = (double) BeeCoordinates.getRandomChannel(0, 100);
             bee.setQuality(calculateQuality(bee));
             bees.add(bee);
         }
@@ -161,12 +162,11 @@ public class BeeAlgorithm {
                     Bee newBee = new Bee(bee);
                     newBee.getCoordinates().put((DziekanatNodeType) entry.getKey(), BeeCoordinates.getRandomChannel(MIN_CHANNEL, MAX_CHANNEL, (Integer) entry.getValue()));
                     if (!newOrdinaryBees.stream().anyMatch(b -> b.getCoordinates().get(entry.getKey()).equals(newBee.getCoordinates().get(entry.getKey())))) {
-                        //TODO tymczasowy randomowy nowy współczynnik
-//						double queeTime = (double) BeeCoordinates.getRandomChannel(0, 100);
-                        updateM(newBee);
-                        newBee.setTimeToLive(TTL);
-                        newBee.setQuality(calculateQuality(newBee));
-                        newOrdinaryBees.add(newBee);
+                        if (updateM(newBee)) {
+                            newBee.setTimeToLive(TTL);
+                            newBee.setQuality(calculateQuality(newBee));
+                            newOrdinaryBees.add(newBee);
+                        }
                     }
                     if (newOrdinaryBees.size() == bee.getCoordinates().size() * importanceFactor) {
                         break;
@@ -186,38 +186,53 @@ public class BeeAlgorithm {
         //średni czas oczekiwania w kolejce
         Double averageTime = 0.0;
         int numberOfChannels = 0;
-        for (String customer : network.getActiveCustomerTypes()) {
-            averageTime += network.getLambdaT(DziekanatNodeType.DZIENNE.toString().toLowerCase(), customer);
-            averageTime += network.getLambdaT(DziekanatNodeType.ZAOCZNE.toString().toLowerCase(), customer);
-            averageTime += network.getLambdaT(DziekanatNodeType.SOCJALNE.toString().toLowerCase(), customer);
-            averageTime += network.getLambdaT(DziekanatNodeType.DOKTORANCKIE.toString().toLowerCase(), customer);
-            averageTime += network.getLambdaT(DziekanatNodeType.DZIEKAN.toString().toLowerCase(), customer);
-        }
+
+		if (network.isOpen()) {
+			for (String customer : network.getActiveCustomerTypes()) {
+				averageTime += network.getLambdaT(DziekanatNodeType.DZIENNE.toString().toLowerCase(), customer);
+				averageTime += network.getLambdaT(DziekanatNodeType.ZAOCZNE.toString().toLowerCase(), customer);
+				averageTime += network.getLambdaT(DziekanatNodeType.SOCJALNE.toString().toLowerCase(), customer);
+				averageTime += network.getLambdaT(DziekanatNodeType.DOKTORANCKIE.toString().toLowerCase(), customer);
+				averageTime += network.getLambdaT(DziekanatNodeType.DZIEKAN.toString().toLowerCase(), customer);
+			}
+		} else {
+			int counter = 0;
+			for (int i = 0; i < ((ClosedNetwork) network).getResidenceTime().getRowDimension(); i++) {
+				for (int j = 0; j < ((ClosedNetwork) network).getResidenceTime().getColumnDimension(); j++) {
+					if (((ClosedNetwork) network).getResidenceTime().getEntry(i,j) > 0 ) {
+						averageTime += ((ClosedNetwork) network).getResidenceTime().getEntry(i,j);
+						counter++;
+					}
+				}
+			}
+			averageTime = (averageTime / counter) * 10;
+		}
 
         for (Map.Entry entry : bee.getCoordinates().entrySet()) {
             numberOfChannels += (int) entry.getValue();
         }
 
-//		averageTime = averageTime / (network.getActiveCustomerTypes().size() * 5);
-
         //TODO Funkcja celu
         return averageTime * AVERAGE_TIME_COEFFICIENT + numberOfChannels * NUMBER_OF_CHANNELS_COEFFICIENT;
     }
 
-    private void updateM(Bee bee) {
+    private boolean updateM(Bee bee) {
         Map<String, QueueSystem> systems = network.getSystemsMap();
-        ((FifoSystem) systems.get(DziekanatNodeType.DZIENNE.toString().toLowerCase())).setM(bee.getCoordinates().get(DziekanatNodeType.DZIENNE));
-        ((FifoSystem) systems.get(DziekanatNodeType.ZAOCZNE.toString().toLowerCase())).setM(bee.getCoordinates().get(DziekanatNodeType.ZAOCZNE));
-        ((FifoSystem) systems.get(DziekanatNodeType.SOCJALNE.toString().toLowerCase())).setM(bee.getCoordinates().get(DziekanatNodeType.SOCJALNE));
-        ((FifoSystem) systems.get(DziekanatNodeType.DZIEKAN.toString().toLowerCase())).setM(bee.getCoordinates().get(DziekanatNodeType.DZIEKAN));
-        ((FifoSystem) systems.get(DziekanatNodeType.DOKTORANCKIE.toString().toLowerCase())).setM(bee.getCoordinates().get(DziekanatNodeType.DOKTORANCKIE));
+		(systems.get(DziekanatNodeType.DZIENNE.toString().toLowerCase())).setM(bee.getCoordinates().get(DziekanatNodeType.DZIENNE));
+        (systems.get(DziekanatNodeType.ZAOCZNE.toString().toLowerCase())).setM(bee.getCoordinates().get(DziekanatNodeType.ZAOCZNE));
+        (systems.get(DziekanatNodeType.SOCJALNE.toString().toLowerCase())).setM(bee.getCoordinates().get(DziekanatNodeType.SOCJALNE));
+        (systems.get(DziekanatNodeType.DZIEKAN.toString().toLowerCase())).setM(bee.getCoordinates().get(DziekanatNodeType.DZIEKAN));
+        (systems.get(DziekanatNodeType.DOKTORANCKIE.toString().toLowerCase())).setM(bee.getCoordinates().get(DziekanatNodeType.DOKTORANCKIE));
 
 		try {
 			network.calculateParameters(false);
-		} catch (QueueException e) {
+		} catch (IncorrectUtilizationException iue) {
+            return false;
+        } catch (QueueException e) {
 			e.printStackTrace();
 		}
-	}
+		return true;
+    }
 
 
     private void decreaseTTL() {

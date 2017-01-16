@@ -74,7 +74,7 @@ public class BeesResultDialog {
 
         Button showParamsBtn = new Button("Show queue parameters");
         showParamsBtn.setOnAction(x -> {
-            new QueueParamsLayout(network);
+            new QueueParamsLayout(network,beeAlgorithm);
         });
 
         rootView.getChildren().add(showParamsBtn);

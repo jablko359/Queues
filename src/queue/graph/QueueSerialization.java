@@ -87,7 +87,7 @@ public class QueueSerialization {
     					Double clientProbability = clientProbabilitiesEntry.getValue();
     					
     					// update output for client
-    					System.out.println(clientId + " @ " + edge.getSourceId() + " -> " + edge.getTargetId() + " with: " + clientProbabilitiesEntry.getValue());
+//    					System.out.println(clientId + " @ " + edge.getSourceId() + " -> " + edge.getTargetId() + " with: " + clientProbabilitiesEntry.getValue());
     					outputProbability.merge(clientId, clientProbability, (o, n) -> o + n);
     				}
     			}

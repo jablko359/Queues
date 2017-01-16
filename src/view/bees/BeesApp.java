@@ -152,15 +152,11 @@ public class BeesApp extends Application implements BeesCallbacks {
         showParamsLayout.setOnAction(x -> {
             if (beesPresenter == null || beesPresenter.getQueue() == null) {
                 showError("Choose file first!");
-            } else new QueueParamsLayout(beesPresenter.getQueue());
+            } else new QueueParamsLayout(beesPresenter.getQueue(), null);
         });
         runBeesAlgorithm = new Button("Run");
         runBeesAlgorithm.setOnAction(c -> {
 
-            if (!beesPresenter.getQueue().isOpen()){
-                showError("Cannot calculate parameters, queue network must be open!");
-                return;
-            }
             BeeAlgorithm beeAlgorithm = null;
 
             try {

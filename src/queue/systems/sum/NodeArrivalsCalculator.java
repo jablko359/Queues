@@ -55,7 +55,7 @@ public class NodeArrivalsCalculator {
 		case LIFO:
 			if (system.getM() == 1)
 				return SINGLE_CHANNEL;
-			System.out.println(system.getId() + " " + system.getType() + " " + system.getM());
+//			System.out.println(system.getId() + " " + system.getType() + " " + system.getM());
 			throw new UnsupportedOperationException();
 		case IS:
 			return IS;

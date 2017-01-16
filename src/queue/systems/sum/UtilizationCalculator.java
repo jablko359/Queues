@@ -53,7 +53,7 @@ public class UtilizationCalculator {
 		}
 		
 		if (systemUtilization >= 1) {
-			System.out.println("Client lambda: " + clientLambda);
+//			System.out.println("Client lambda: " + clientLambda);
 			throw new IncorrectUtilizationException(systems[systemIdx].getId(), systemUtilization);
 		}
 		return systemUtilization;
