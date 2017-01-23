@@ -28,11 +28,9 @@ public class UtilizationCalculator {
 		double probability = Math.pow(systemOverload, systemChannels);
 		double denominator = 0;
 		for(int channel = 0; channel < systemChannels; channel++) {
-			denominator += Math.pow(systemOverload, channel) / Utils.factorial(channel);
-			denominator += Math.pow(systemOverload, systemChannels) / (Utils.factorial(systemChannels) * (1 - systemUtilization));
-			
+			denominator += Math.pow(systemOverload, channel) / Utils.factorial(channel);		
 		}
-		
+		denominator += Math.pow(systemOverload, systemChannels) / (Utils.factorial(systemChannels) * (1 - systemUtilization));
 		probability /= Utils.factorial(systemChannels) * (1 - systemUtilization);
 		probability /= denominator;
 		
@@ -53,9 +51,9 @@ public class UtilizationCalculator {
 		}
 		
 		if (systemUtilization >= 1) {
-//			System.out.println("Client lambda: " + clientLambda);
-			throw new IncorrectUtilizationException(systems[systemIdx].getId(), systemUtilization);
-		}
+			System.out.println("Client lambda: " + clientLambda);
+		throw new IncorrectUtilizationException(systems[systemIdx].getId(), systemUtilization);
+	}
 		return systemUtilization;
 	}
 }

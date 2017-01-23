@@ -99,29 +99,34 @@ public class ClosedNetwork extends QueueNetwork {
 		int i = systems.length;
 		RealMatrix eir = MatrixUtils.createRealMatrix(i, r);
 		
-		RealVector constant = new ArrayRealVector(i);
-		constant.setEntry(0, -1);
-		
 		// without class transformation, we can solve r sets of linear equations for each r
 		for(int clientIdx = 0; clientIdx < r; clientIdx++) {
+			RealVector constant = new ArrayRealVector(i);
 			RealMatrix coeffs = MatrixUtils.createRealMatrix(i, i);
+			// poulate constant
 			for(int to = 0; to < i; to++) {
 				Map<QueueSystem, Data> toSystemProbabilities = systems[to].getInputs();
 				for(int from = 0; from < i; from++) {
-					if (from == to) {
-						coeffs.setEntry(to, from, -1);
-					} else if (to != 0 && toSystemProbabilities.containsKey(systems[from])) {
+					if (toSystemProbabilities.containsKey(systems[from])) {
 						// get probability of transition fromSystem to toSystem
 						Data transitionProbability = toSystemProbabilities.get(systems[from]);
-						coeffs.setEntry(to, from, transitionProbability.getValue(clients[clientIdx]));
+						double probability = transitionProbability.getValue(clients[clientIdx]);
+						coeffs.setEntry(to, from, probability);
+						if (from == 0) { // e1 = 1
+							constant.setEntry(to, probability);				
+						}
 					}
 				}
 			}
-//			System.out.println("Coeffs for " + clients[clientIdx] + " " + coeffs);
-			
+			coeffs = MatrixUtils.createRealIdentityMatrix(i).subtract(coeffs);
+//			System.out.println("Coeffs for: " + clients[clientIdx] + " " + coeffs);
+//			System.out.println("Constant for: " + clients[clientIdx] + " " + constant);
 			// solve set of linear equations
-			DecompositionSolver solver = new LUDecomposition(coeffs).getSolver();
-			RealVector ei = solver.solve(constant);
+			DecompositionSolver solver = new LUDecomposition(coeffs.getSubMatrix(1, i-1, 1, i-1)).getSolver();
+			RealVector result = solver.solve(constant.getSubVector(1, i-1));
+			RealVector ei = new ArrayRealVector(i);
+			ei.setEntry(0, 1);
+			ei.setSubVector(1, result);
 			eir.setColumnVector(clientIdx, ei);
 		}
 		return eir;
@@ -132,6 +137,7 @@ public class ClosedNetwork extends QueueNetwork {
 		
 		// compute eir 
 		avgVisits = computeEir(getSystemsAsArray(), getClientsAsArray());
+//		System.out.println("Visits: " + avgVisits);
 		
 		// compute client lambdas
 		ClientLambdaCalculator clientLambdasCalc = new ClientLambdaCalculator(getSystemsAsArray(), getCapacitiesAsArray(), avgVisits);

@@ -5,40 +5,40 @@
 		<entry>
 			<key>dzienne</key>
 			<value>
-				<m>4</m>
-				<mi>8</mi>
+				<m>7</m>
+				<mi>10</mi>
 				<systemType>FIFO</systemType>
 			</value>
 		</entry>
 		<entry>
 			<key>zaoczne</key>
 			<value>
-				<m>2</m>
-				<mi>7</mi>
+				<m>4</m>
+				<mi>10</mi>
 				<systemType>FIFO</systemType>
 			</value>
 		</entry>
 		<entry>
 			<key>doktoranckie</key>
 			<value>
-				<m>6</m>
-				<mi>6</mi>
+				<m>10</m>
+				<mi>10</mi>
 				<systemType>FIFO</systemType>
 			</value>
 		</entry>
 		<entry>
 			<key>socjalne</key>
 			<value>
-				<m>2</m>
-				<mi>9</mi>
+				<m>6</m>
+				<mi>10</mi>
 				<systemType>FIFO</systemType>
 			</value>
 		</entry>
 		<entry>
 			<key>dziekan</key>
 			<value>
-				<m>3</m>
-				<mi>6</mi>
+				<m>10</m>
+				<mi>10</mi>
 				<systemType>FIFO</systemType>
 			</value>
 		</entry>
@@ -262,7 +262,7 @@
 	<networkCapacity>
 		<entry>
 			<key>Pracownik</key>
-			<value>5</value></entry>
+			<value>10</value></entry>
 		<entry>
 			<key>Student</key>
-			<value>5</value></entry></networkCapacity></queueNetwork>
+			<value>20</value></entry></networkCapacity></queueNetwork>
