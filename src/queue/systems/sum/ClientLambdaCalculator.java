@@ -13,6 +13,7 @@ import queue.systems.QueueSystem;
 public class ClientLambdaCalculator {
 
 	static final double METHOD_EPSILON = 0.00001;
+	static final int METHOD_STEPS = 100;
 
 	QueueSystem[] systems;
 	int[] capacities;
@@ -47,7 +48,8 @@ public class ClientLambdaCalculator {
 		RealVector previousClientLambda = new ArrayRealVector(r);
 		clientLambda.set(METHOD_EPSILON);
 		
-		while(clientLambda.getDistance(previousClientLambda) > METHOD_EPSILON) {
+		int i = 0;
+		while(clientLambda.getDistance(previousClientLambda) > METHOD_EPSILON && i++ < METHOD_STEPS) {
 			previousClientLambda = clientLambda.copy();
 			clientLambda = computeOnce(clientLambda);
 		}
